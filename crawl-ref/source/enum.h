@@ -699,6 +699,7 @@ enum beam_type                  // bolt::flavour
 
 enum book_type
 {
+    BOOK_SPIRIT_WALKING,
     BOOK_MINOR_MAGIC,
     BOOK_CONJURATIONS,
     BOOK_FLAMES,
@@ -2361,6 +2362,7 @@ enum job_type
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
+		JOB_SHAMAN,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

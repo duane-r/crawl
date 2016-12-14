@@ -447,7 +447,7 @@ static const map<species_type, species_def> species_data =
     1, 0, 0, 3,
     MONS_HUMAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 11, 11, // 24
+    8, 8, 8, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     {},
     {},

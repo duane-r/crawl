@@ -97,6 +97,10 @@ bolt
 
 A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
 %%%%
+book of spirit walking
+
+A strange, composite book.
+%%%%
 book of air
 
 A primer on the elemental magics of Air. Particularly dedicated students have
