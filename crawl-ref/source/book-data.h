@@ -4,12 +4,16 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Spirit Walking
     SPELL_APPORTATION, // trans
+    //SPELL_INFUSION, // charm
     SPELL_SUMMON_BUTTERFLIES, // summ
     SPELL_BLINK, // trans
     SPELL_CALL_IMP, // summ
+    //SPELL_REPEL_MISSILES, // charm, air
     SPELL_SHROUD_OF_GOLUBRIA, // charms, trans
     SPELL_CALL_CANINE_FAMILIAR, // summ
+    //SPELL_CONFUSE, // hex
     SPELL_PORTAL_PROJECTILE, // trans
+    //SPELL_SPECTRAL_WEAPON, // charm, hex
 },
 
 {   // Book of Minor Magic
