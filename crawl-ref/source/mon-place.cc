@@ -245,7 +245,7 @@ static int _scale_spawn_parameter(int base_value,
     if (!_is_spawn_scaled_area(level_id::current()))
         return base_value;
 
-    const int turns_on_level = env.turns_on_level;
+    const int turns_on_level = 100.0;
     return turns_on_level <= dropoff_start_turns ? base_value :
            turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
            final_value :
@@ -269,6 +269,7 @@ static void _apply_ood(level_id &place)
         return;
     }
 
+#if 0
     // The OOD fuzz roll is not applied at level generation time on
     // D:1, and is applied slightly less often (0.75*0.14) on D:2. All
     // other levels have a straight 14% chance of moderate OOD fuzz
@@ -311,6 +312,7 @@ static void _apply_ood(level_id &place)
         dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
              old_place.describe().c_str(), place.describe().c_str());
     }
+#endif
 }
 
 static int _vestibule_spawn_rate()
