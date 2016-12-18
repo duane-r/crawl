@@ -4498,7 +4498,7 @@ static bool _is_temple_god(god_type god)
     switch (god)
     {
     case GOD_NO_GOD:
-    case GOD_LUGONU:
+    //case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
         return false;

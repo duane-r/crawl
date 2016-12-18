@@ -3499,6 +3499,9 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     if (has_ench(ENCH_AGILE))
         ev += 5;
 
+    if (has_ench(ENCH_SHROUD))
+        ev += 5 + get_hit_dice() / 5;
+
     if (evit & EV_IGNORE_HELPLESS)
         return max(ev, 0);
 

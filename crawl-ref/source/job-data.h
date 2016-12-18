@@ -29,9 +29,9 @@ static const map<job_type, job_def> job_data =
     { "hunting sling", "leather armour", "book of Spirit Walking", "stone q:10", },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
-      { SK_SPELLCASTING, 2 }, { SK_CHARMS, 1 }, { SK_SUMMONINGS, 1 },
-		 	{ SK_TRANSLOCATIONS, 1 }, { SK_SLINGS, 1 },
-      { SK_WEAPON, 2 }, },
+      { SK_SPELLCASTING, 2 }, { SK_SUMMONINGS, 2 }, { SK_TRANSLOCATIONS, 2 }, 
+      //{ SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 },
+      { SK_SLINGS, 1 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_ABYSSAL_KNIGHT, {

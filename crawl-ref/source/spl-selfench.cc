@@ -369,7 +369,9 @@ spret_type cast_shroud_of_golubria(int pow, bool fail)
     else
         mpr("Space distorts slightly along a thin shroud covering your body.");
 
-    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50);
+    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 20 + roll_dice(2, pow), 50);
+    you.props[SHROUD_KEY] = pow;
+    you.redraw_evasion = true;
     return SPRET_SUCCESS;
 }
 

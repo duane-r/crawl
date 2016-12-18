@@ -1,19 +1,14 @@
 // This needs to be re-ordered when TAG_MAJOR_VERSION changes!
 static const vector<spell_type> spellbook_templates[] =
 {
-
 {   // Book of Spirit Walking
     SPELL_APPORTATION, // trans
-    //SPELL_INFUSION, // charm
     SPELL_SUMMON_BUTTERFLIES, // summ
     SPELL_BLINK, // trans
     SPELL_CALL_IMP, // summ
-    //SPELL_REPEL_MISSILES, // charm, air
     SPELL_SHROUD_OF_GOLUBRIA, // charms, trans
     SPELL_CALL_CANINE_FAMILIAR, // summ
-    //SPELL_CONFUSE, // hex
     SPELL_PORTAL_PROJECTILE, // trans
-    //SPELL_SPECTRAL_WEAPON, // charm, hex
 },
 
 {   // Book of Minor Magic
@@ -156,10 +151,12 @@ static const vector<spell_type> spellbook_templates[] =
 #if TAG_MAJOR_VERSION > 34
 {   // Book of Battle
     SPELL_INFUSION,
+    SPELL_REPEL_MISSILES,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_SONG_OF_SLAYING,
+    SPELL_SWIFTNESS,
     SPELL_SPECTRAL_WEAPON,
-    SPELL_REGENERATION,
+    //SPELL_REGENERATION,
 },
 #endif
 {   // Book of Clouds

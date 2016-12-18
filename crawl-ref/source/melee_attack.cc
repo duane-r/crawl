@@ -485,6 +485,8 @@ bool melee_attack::handle_phase_hit()
 
 bool melee_attack::handle_phase_damaged()
 {
+  // Shroud is an evasion bonus now.
+#if 0	
     bool shroud_broken = false;
 
     // TODO: Move this somewhere else, this is a terrible place for a
@@ -522,16 +524,19 @@ bool melee_attack::handle_phase_damaged()
             return false;
         }
     }
+#endif
 
     if (!attack::handle_phase_damaged())
         return false;
 
+#if 0
     if (shroud_broken && needs_message)
     {
         mprf(defender->is_player() ? MSGCH_WARN : MSGCH_PLAIN,
              "%s shroud falls apart!",
              def_name(DESC_ITS).c_str());
     }
+#endif
 
     return true;
 }

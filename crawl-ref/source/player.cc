@@ -6163,8 +6163,10 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
                               10 : 0;
+    const int shroud_bonus = duration[DUR_SHROUD_OF_GOLUBRIA] ?
+        5 + you.props[SHROUD_KEY].get_int() / 10 : 0;
 
-    return base_evasion - constrict_penalty - invis_penalty;
+    return base_evasion + shroud_bonus - constrict_penalty - invis_penalty;
 }
 
 bool player::heal(int amount)
