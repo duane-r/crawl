@@ -156,7 +156,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SONG_OF_SLAYING,
     SPELL_SWIFTNESS,
     SPELL_SPECTRAL_WEAPON,
-    //SPELL_REGENERATION,
+    SPELL_REGENERATION,
 },
 #endif
 {   // Book of Clouds
@@ -245,8 +245,10 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Battle (replacing Morphology)
     SPELL_INFUSION,
+    SPELL_REPEL_MISSILES,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_SONG_OF_SLAYING,
+    SPELL_SWIFTNESS,
     SPELL_SPECTRAL_WEAPON,
     SPELL_REGENERATION,
 },
