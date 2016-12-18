@@ -245,7 +245,7 @@ static int _scale_spawn_parameter(int base_value,
     if (!_is_spawn_scaled_area(level_id::current()))
         return base_value;
 
-    const int turns_on_level = 100.0;
+    const int turns_on_level = env.turns_on_level;
     return turns_on_level <= dropoff_start_turns ? base_value :
            turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
            final_value :
@@ -269,7 +269,6 @@ static void _apply_ood(level_id &place)
         return;
     }
 
-#if 0
     // The OOD fuzz roll is not applied at level generation time on
     // D:1, and is applied slightly less often (0.75*0.14) on D:2. All
     // other levels have a straight 14% chance of moderate OOD fuzz
@@ -312,7 +311,6 @@ static void _apply_ood(level_id &place)
         dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
              old_place.describe().c_str(), place.describe().c_str());
     }
-#endif
 }
 
 static int _vestibule_spawn_rate()
@@ -464,7 +462,7 @@ monster_type pick_random_monster(level_id place,
             return type;
     }
 
-    if (allow_ood)
+    if (false && allow_ood)
         _apply_ood(place);
 
     place.depth = min(place.depth, branch_ood_cap(place.branch));
@@ -837,7 +835,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (!mg.place.is_valid())
         mg.place = level_id::current();
 
-    const bool allow_ood = !(mg.flags & MG_NO_OOD);
+    const bool allow_ood = false;
     bool want_band = false;
     level_id place = mg.place;
     mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
