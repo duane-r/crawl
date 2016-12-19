@@ -30,7 +30,7 @@
 #define ENDOFPACK 52
 
 // Max ghosts on a level.
-const int MAX_GHOSTS = 10;
+const int MAX_GHOSTS = 2;
 
 enum extra_monster_index_type
 {
@@ -68,13 +68,13 @@ COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 #endif
 
 // max x-bound for level generation {dlb}
-#define GXM 80
+#define GXM 120
 // max y-bound for level generation {dlb}
-#define GYM 70
+#define GYM 105
 
 const int INFINITE_DISTANCE = 30000;
 // max distance on a map
-#define GDM 105
+#define GDM 158
 
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
@@ -114,7 +114,7 @@ const int LABYRINTH_BORDER = 4;
 
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game
-#define MAX_RANDOM_SHOPS  5
+#define MAX_RANDOM_SHOPS  10
 
 #define MAX_BRANCH_DEPTH 27
 

@@ -242,6 +242,8 @@ static int _scale_spawn_parameter(int base_value,
                                   int dropoff_start_turns = 3000,
                                   int dropoff_ramp_turns  = 12000)
 {
+	return base_value;
+#if 0
     if (!_is_spawn_scaled_area(level_id::current()))
         return base_value;
 
@@ -255,6 +257,7 @@ static int _scale_spawn_parameter(int base_value,
             (target_value - base_value)
             * (turns_on_level - dropoff_start_turns)
             / dropoff_ramp_turns);
+#endif
 }
 
 static void _apply_ood(level_id &place)
@@ -353,7 +356,7 @@ void spawn_random_monsters()
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
 #endif
-    int rate = env.spawn_random_rate;
+    int rate = env.spawn_random_rate / 2.0;
     if (!rate)
     {
 #ifdef DEBUG_MON_CREATION
