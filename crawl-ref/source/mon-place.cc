@@ -356,7 +356,7 @@ void spawn_random_monsters()
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
 #endif
-    int rate = env.spawn_random_rate / 2.0;
+    int rate = env.spawn_random_rate / 2;
     if (!rate)
     {
 #ifdef DEBUG_MON_CREATION
