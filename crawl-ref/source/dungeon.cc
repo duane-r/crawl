@@ -1237,7 +1237,7 @@ static int _num_items_wanted(int absdepth0)
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
         return 10 + random2avg(90, 2); // rich level!
     else
-        return 3 + roll_dice(3, 16);
+        return 3 + roll_dice(4, 12);
 }
 
 static int _num_mons_wanted()
@@ -1258,7 +1258,7 @@ static int _num_mons_wanted()
     if (player_in_branch(BRANCH_CRYPT))
         return roll_dice(3, 8);
 
-    int mon_wanted = roll_dice(3, 15);
+    int mon_wanted = 3 + roll_dice(4, 11);
 
     if (player_in_hell())
         mon_wanted += roll_dice(3, 8);
