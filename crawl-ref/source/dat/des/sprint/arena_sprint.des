@@ -1064,7 +1064,7 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed centaur barding | mundane not_cursed cloak |\
             mundane not_cursed buckler | mundane not_cursed pair of gloves |\
             mundane not_cursed helmet
-KFEAT:  M = food shop count:17 type:Bee suffix:Food greed:4 ; royal jelly q:3
+KFEAT:  M = food shop count:17 type:Bee suffix:Food greed:4 ; nothing
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of summoning | staff of wizardry |\
             staff of fire | staff of air | staff of earth | staff of cold |\
@@ -1090,8 +1090,8 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             potion of haste q:5 | potion of haste q:5 |\
             crystal ball of energy
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
-            fruit q:100 | potion of blood q:5 | potion of blood q:5 |\
-            potion of blood q:5 | potion of blood q:5 | ring of poison resistance |\
+            fruit q:100 | nothing | nothing |\
+            nothing | nothing | ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
             ring of protection from magic | amulet of regeneration |\
             amulet of the gourmand | amulet of harm | amulet of reflection |\
