@@ -1125,9 +1125,9 @@ int attack::player_stat_modify_damage(int damage)
     int dammod = 39;
 
     if (you.strength() > 10)
-        dammod += (random2(you.strength() - 10) * 2);
+        dammod += (random2(you.strength() - 9) * 2);
     else if (you.strength() < 10)
-        dammod -= (random2(10 - you.strength()) * 3);
+        dammod -= (random2(11 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
@@ -1443,12 +1443,7 @@ bool attack::apply_damage_brand(const char *what)
     bool ret = false;
 
     if (using_weapon())
-    {
-        if (is_artefact(*weapon))
-            brand_was_known = artefact_known_property(*weapon, ARTP_BRAND);
-        else
-            brand_was_known = item_type_known(*weapon);
-    }
+        brand_was_known = item_brand_known(*weapon);
 
     special_damage = 0;
     obvious_effect = false;
@@ -1669,7 +1664,7 @@ bool attack::apply_damage_brand(const char *what)
         {
             miscast_level  = 0;
             miscast_type   = SPTYP_RANDOM;
-            miscast_target = coinflip() ? attacker : defender;
+            miscast_target = random_choose(attacker, defender);
         }
 
         if (responsible->is_player())
