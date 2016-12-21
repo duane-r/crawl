@@ -6374,8 +6374,6 @@ void monster::steal_item_from_player()
     ASSERT(mslot != NUM_MONSTER_SLOTS);
     ASSERT(inv[mslot] == NON_ITEM);
 
-    const int orig_qty = you.inv[steal_what].quantity;
-
     mprf("%s steals %s!",
          name(DESC_THE).c_str(),
          you.inv[steal_what].name(DESC_YOUR).c_str());
@@ -6387,18 +6385,6 @@ void monster::steal_item_from_player()
 
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;
-
-    // Fix up blood/chunk timers.
-    if (is_perishable_stack(new_item))
-    {
-        // Somehow they always steal the freshest blood.
-        for (int i = new_item.quantity; i < orig_qty; ++i)
-            remove_oldest_perishable_item(new_item);
-
-        // If the whole stack is gone, it doesn't need to be cleaned up.
-        if (you.inv[steal_what].defined())
-            remove_newest_perishable_item(you.inv[steal_what]);
-    }
 }
 
 /**

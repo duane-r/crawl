@@ -1862,15 +1862,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_FOOD:
         switch (item_typ)
         {
-        case FOOD_MEAT_RATION: buff << "meat ration"; break;
-        case FOOD_BREAD_RATION: buff << "bread ration"; break;
-        case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_FRUIT: buff << "fruit"; break;
-        case FOOD_PIZZA: buff << "slice of pizza"; break;
-        case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
-        case FOOD_CHUNK:
-            buff << "chunk of flesh";
-            break;
 #if TAG_MAJOR_VERSION == 34
         default: buff << "removed food"; break;
 #endif
@@ -2392,29 +2384,11 @@ public:
         {
             switch (item->sub_type)
             {
-            case FOOD_CHUNK:
-                name = "chunks";
-                break;
-            case FOOD_MEAT_RATION:
-                name = "meat rations";
-                break;
-            case FOOD_BEEF_JERKY:
-                name = "beef jerky";
-                break;
-            case FOOD_BREAD_RATION:
-                name = "bread rations";
-                break;
 #if TAG_MAJOR_VERSION == 34
             default:
 #endif
             case FOOD_FRUIT:
                 name = "fruit";
-                break;
-            case FOOD_PIZZA:
-                name = "pizza";
-                break;
-            case FOOD_ROYAL_JELLY:
-                name = "royal jellies";
                 break;
             }
         }
@@ -2545,11 +2519,6 @@ static void _add_fake_item(object_class_type base, int sub,
         ptmp->charges = wand_max_charges(*ptmp);
     else if (base == OBJ_GOLD)
         ptmp->quantity = 18;
-    else if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
-    {
-        ptmp->freshness = 100;
-        ptmp->mon_type = MONS_RAT;
-    }
     else if (is_deck(*ptmp, true)) // stupid fake decks
         ptmp->deck_rarity = DECK_RARITY_COMMON;
 

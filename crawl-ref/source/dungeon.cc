@@ -4240,12 +4240,6 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
             ispec.props[MONSTER_HIT_DICE].get_short();
     }
 
-    if (ispec.qty && ispec.base_type == OBJ_FOOD)
-    {
-        corpse->quantity = ispec.qty;
-        init_perishable_stack(*corpse);
-    }
-
     return corpse->index();
 }
 

@@ -1939,11 +1939,6 @@ void drink(item_def* potion)
         // a dangerous monster nearby...
         xom_is_stimulated(200);
     }
-    if (is_blood_potion(*potion))
-    {
-        // Always drink oldest potion.
-        remove_oldest_perishable_item(*potion);
-    }
     if (in_inventory(*potion))
     {
         dec_inv_item_quantity(potion->link, 1);

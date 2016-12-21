@@ -4683,8 +4683,7 @@ void item_spec::release_corpse_monster_spec()
 bool item_spec::corpselike() const
 {
     return base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
-                                        || sub_type == CORPSE_SKELETON)
-           || base_type == OBJ_FOOD && sub_type == FOOD_CHUNK;
+                                        || sub_type == CORPSE_SKELETON);
 }
 
 const mons_spec &item_spec::corpse_monster_spec() const
@@ -5033,9 +5032,8 @@ bool item_list::parse_corpse_spec(item_spec &result, string s)
     const bool skeleton = !corpse && strip_suffix(s, "skeleton");
     const bool chunk = !corpse && !skeleton && strip_suffix(s, "chunk");
 
-    result.base_type = chunk ? OBJ_FOOD : OBJ_CORPSES;
-    result.sub_type  = (chunk ? static_cast<int>(FOOD_CHUNK) :
-                        static_cast<int>(corpse ? CORPSE_BODY :
+    result.base_type = OBJ_CORPSES;
+    result.sub_type  = (static_cast<int>(corpse ? CORPSE_BODY :
                                          CORPSE_SKELETON));
 
     // The caller wants a specific monster, no doubt with the best of

@@ -1178,8 +1178,7 @@ bool origin_describable(const item_def &item)
            && !_origin_is_special(item)
            && !is_stackable_item(item)
            && item.quantity == 1
-           && item.base_type != OBJ_CORPSES
-           && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK);
+           && item.base_type != OBJ_CORPSES;
 }
 
 static string _article_it(const item_def &item)
@@ -1591,9 +1590,6 @@ void merge_item_stacks(const item_def &source, item_def &dest, int quant)
         quant = source.quantity;
 
     ASSERT_RANGE(quant, 0 + 1, source.quantity + 1);
-
-    if (is_perishable_stack(source) && is_perishable_stack(dest))
-        merge_perishable_stacks(source, dest, quant);
 }
 
 static int _userdef_find_free_slot(const item_def &i)
@@ -1742,10 +1738,6 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
     if (_merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
         put_in_inv = true;
-        // if you succeeded, actually reduce the number in the original stack
-        if (quant_got != it.quantity && is_perishable_stack(it))
-            for (int i = 0; i < quant_got; i++)
-                remove_oldest_perishable_item(it);
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
@@ -2014,10 +2006,6 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     }
 
     note_inscribe_item(item);
-
-    // avoid blood potion timer/stack size mismatch
-    if (quant_got != it.quantity && is_perishable_stack(it))
-        remove_newest_perishable_item(item);
 
     if (crawl_state.game_is_hints())
     {
@@ -2337,10 +2325,6 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     }
 
     move_item_to_grid(&new_item_idx, p, true);
-    // In the case of a partial drop, since only the oldest items have
-    // been dropped, remove the newest ones.
-    if (item.quantity != quant_drop && is_perishable_stack(item))
-        remove_newest_perishable_item(new_item);
 
     return true;
 }
@@ -2498,14 +2482,6 @@ bool drop_item(int item_dropped, int quant_drop)
     // makes no noise falling.
     if (silenced(you.pos()) || you.swimming())
         feat_splash_noise(grd(you.pos()));
-
-    // XP evoker has been handled in copy_item_to_grid
-    if (item.quantity != quant_drop && is_perishable_stack(item))
-    {
-        // Oldest potions have been dropped.
-        for (int i = 0; i < quant_drop; i++)
-            remove_oldest_perishable_item(item);
-    }
 
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
@@ -3122,8 +3098,6 @@ static void _do_autopickup()
             clear_item_pickup_flags(mi);
 
             const bool pickup_result = move_item_to_inv(o, mi.quantity);
-            if (mi.is_type(OBJ_FOOD, FOOD_CHUNK))
-                mi.flags |= ISFLAG_DROPPED;
 
             if (pickup_result)
             {
@@ -3585,16 +3559,8 @@ colour_t item_def::food_colour() const
 
     switch (sub_type)
     {
-        case FOOD_ROYAL_JELLY:
-        case FOOD_PIZZA:
-            return YELLOW;
         case FOOD_FRUIT:
             return LIGHTGREEN;
-        case FOOD_CHUNK:
-            return LIGHTRED;
-        case FOOD_BEEF_JERKY:
-        case FOOD_BREAD_RATION:
-        case FOOD_MEAT_RATION:
         default:
             return BROWN;
     }
@@ -4486,17 +4452,6 @@ bool get_item_by_name(item_def *item, const char* specs,
 
     case OBJ_POTIONS:
         item->quantity = 12;
-        if (is_blood_potion(*item))
-        {
-            const char* prompt;
-            prompt = "# turns away from rotting? "
-                     "[ENTER for fully fresh] ";
-            int age = prompt_for_int(prompt, false);
-
-            if (age <= 0)
-                age = -1;
-            init_perishable_stack(*item, age);
-        }
         break;
 
     case OBJ_FOOD:
@@ -4646,11 +4601,6 @@ item_info get_item_info(const item_def& item)
         break;
     case OBJ_FOOD:
         ii.sub_type = item.sub_type;
-        if (ii.sub_type == FOOD_CHUNK)
-        {
-            ii.mon_type = item.mon_type;
-            ii.freshness = 100;
-        }
         break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;

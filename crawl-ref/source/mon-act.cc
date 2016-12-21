@@ -775,10 +775,6 @@ static bool _handle_potion(monster& mons)
         if (mons.drink_potion_effect(ptype) && was_visible)
             set_ident_type(OBJ_POTIONS, ptype, true);
 
-        // Remove the oldest blood timer.
-        if (is_blood_potion(*potion))
-            remove_oldest_perishable_item(*potion);
-
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion->index(), 1))
             mons.inv[MSLOT_POTION] = NON_ITEM;
@@ -2720,9 +2716,6 @@ static bool _monster_eat_item(monster* mons)
 
         if (quant >= si->quantity)
             item_was_destroyed(*si);
-        else if (is_perishable_stack(*si))
-            for (int i = 0; i < quant; ++i)
-                remove_oldest_perishable_item(*si);
         dec_mitm_item_quantity(si.index(), quant);
     }
 
