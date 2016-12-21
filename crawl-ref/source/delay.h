@@ -120,14 +120,6 @@ public:
     }
 
     /**
-     * @return whether this is a butcher delay (including blood bottling).
-     */
-    virtual bool is_butcher() const
-    {
-        return false;
-    }
-
-    /**
      * @return whether this is a stair travel delay, which are generally
      * uninterruptible but are interrupted by teleport. Note that no stairs
      * are necessarily involved.
@@ -146,14 +138,6 @@ public:
     }
 
     virtual bool is_resting() const
-    {
-        return false;
-    }
-
-    /**
-     * @return whether it's OK to start eating during this delay if hungry.
-     */
-    virtual bool want_autoeat() const
     {
         return false;
     }
@@ -204,38 +188,6 @@ public:
      * @return the delay's name; used in debugging and for the interrupt_ option family.
      */
     virtual const char* name() const = 0;
-};
-
-class EatDelay : public Delay
-{
-    item_def& food;
-    bool was_prompted = false;
-
-    bool invalidated() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
-    }
-
-    bool try_interrupt() override;
-
-    void finish() override;
-public:
-    EatDelay(int dur, item_def& item) :
-             Delay(dur), food(item)
-    {
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_EAT && (!item || &food == item);
-    }
-
-    const char* name() const override
-    {
-        return "eat";
-    }
 };
 
 class ArmourOnDelay : public Delay
@@ -332,66 +284,6 @@ public:
     const char* name() const override
     {
         return "memorise";
-    }
-};
-
-class ButcherDelay : public Delay
-{
-    item_def& corpse;
-
-    bool invalidated() override;
-
-    void finish() override;
-public:
-    ButcherDelay(int dur, item_def& item) :
-                 Delay(dur), corpse(item)
-    { }
-
-    bool try_interrupt() override;
-
-    bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_BUTCHER && (!item || &corpse == item);
-    }
-
-    const char* name() const override
-    {
-        return "butcher";
-    }
-};
-
-class BottleBloodDelay : public Delay
-{
-    item_def& corpse;
-
-    bool invalidated() override;
-
-    void finish() override;
-public:
-    BottleBloodDelay(int dur, item_def& item) :
-                     Delay(dur), corpse(item)
-    { }
-
-    bool try_interrupt() override;
-
-    bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_BUTCHER && (!item || &corpse == item);
-    }
-
-    const char* name() const override
-    {
-        return "bottle_blood";
     }
 };
 
@@ -562,11 +454,6 @@ class RestDelay : public BaseRunDelay
         return false;
     }
 
-    bool want_autoeat() const override
-    {
-        return true;
-    }
-
     bool want_clear_messages() const override
     {
         return false;
@@ -591,11 +478,6 @@ public:
 class TravelDelay : public BaseRunDelay
 {
     bool want_move() const override
-    {
-        return true;
-    }
-
-    bool want_autoeat() const override
     {
         return true;
     }
@@ -732,9 +614,6 @@ bool you_are_delayed();
 shared_ptr<Delay> current_delay();
 void handle_delay();
 
-bool is_being_drained(const item_def &item);
-bool is_being_butchered(const item_def &item, bool just_first = true);
-bool is_vampire_feeding();
 bool player_stair_delay();
 bool already_learning_spell(int spell = -1);
 

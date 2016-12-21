@@ -9,10 +9,11 @@
 
 #include <algorithm>
 
-#include "butcher.h"
+
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "fprop.h"

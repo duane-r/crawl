@@ -12,7 +12,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
-#include "butcher.h"
+
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
@@ -26,7 +26,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "food.h"
+
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
@@ -380,21 +380,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
         if (say_reason)
         {
             mpr("This weapon is holy and will not allow you to wield it.");
-            id_brand = true;
-        }
-        else
-            return false;
-    }
-    else if (!ignore_temporary_disability
-             && you.hunger_state < HS_FULL
-             && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
-             && you.undead_state() == US_ALIVE
-             && !you_foodless()
-             && (item_type_known(*weapon) || !only_known))
-    {
-        if (say_reason)
-        {
-            mpr("This weapon is vampiric, and you must be Full or above to equip it.");
             id_brand = true;
         }
         else
@@ -1889,7 +1874,7 @@ static void _vampire_corpse_help()
 
 void drink(item_def* potion)
 {
-    if (you_foodless(true))
+    if (you_potionless(true))
     {
         mpr("You can't drink.");
         return;
@@ -3004,8 +2989,6 @@ void read_scroll(item_def& scroll)
 
 void tile_item_use_floor(int idx)
 {
-    if (mitm[idx].is_type(OBJ_CORPSES, CORPSE_BODY))
-        butchery(&mitm[idx]);
 }
 
 void tile_item_pickup(int idx, bool part)
@@ -3043,8 +3026,6 @@ void tile_item_drop(int idx, bool partdrop)
 
 void tile_item_eat_floor(int idx)
 {
-    if (can_eat(mitm[idx], false))
-        eat_item(mitm[idx]);
 }
 
 void tile_item_use_secondary(int idx)
@@ -3140,18 +3121,6 @@ void tile_item_use(int idx)
             }
             else if (check_warning_inscriptions(item, OPER_WEAR))
                 wear_armour(idx);
-            return;
-
-        case OBJ_CORPSES:
-            if (you.species != SP_VAMPIRE
-                || item.sub_type == CORPSE_SKELETON)
-            {
-                break;
-            }
-            // intentional fall-through for Vampires
-        case OBJ_FOOD:
-            if (check_warning_inscriptions(item, OPER_EAT))
-                eat_food(idx);
             return;
 
         case OBJ_BOOKS:

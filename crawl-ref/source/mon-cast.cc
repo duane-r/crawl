@@ -1937,15 +1937,6 @@ static bool _animate_dead_okay(spell_type spell)
     if (crawl_state.game_is_arena())
         return true;
 
-    if (you_are_delayed() && current_delay()->is_butcher()
-        || is_vampire_feeding())
-    {
-        return false;
-    }
-
-    if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
-        return false;
-
     if (god_hates_spell(spell, you.religion))
         return false;
 
@@ -1978,9 +1969,6 @@ static bool _foe_should_res_negative_energy(const actor* foe)
             // Demonspawn are not demons, and statue form grants only
             // partial resistance.
             return false;
-        case US_SEMI_UNDEAD:
-            // Non-bloodless vampires do not appear immune.
-            return you.hunger_state <= HS_STARVING;
         default:
             return true;
         }

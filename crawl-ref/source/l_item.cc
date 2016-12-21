@@ -17,7 +17,7 @@
 #include "coord.h"
 #include "enum.h"
 #include "env.h"
-#include "food.h"
+
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -587,7 +587,7 @@ IDEF(is_preferred_food)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, is_preferred_food(*item));
+    lua_pushboolean(ls, false);
 
     return 1;
 }
@@ -597,7 +597,7 @@ IDEF(is_bad_food)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, is_bad_food(*item));
+    lua_pushboolean(ls, true);
 
     return 1;
 }

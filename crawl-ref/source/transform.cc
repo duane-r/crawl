@@ -1610,11 +1610,11 @@ undead_form_reason lifeless_prevents_form(transformation_type which_trans,
         if (involuntary)
             return UFR_TOO_DEAD; // but not as a forced polymorph effect
 
-        return you.hunger_state <= HS_SATIATED ? UFR_GOOD : UFR_TOO_ALIVE;
+        return UFR_GOOD;
     }
 
     // other forms can only be entered when satiated or above.
-    return you.hunger_state >= HS_SATIATED ? UFR_GOOD : UFR_TOO_DEAD;
+    return UFR_TOO_DEAD;
 }
 
 /**

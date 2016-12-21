@@ -23,7 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "evoke.h"
-#include "food.h"
+
 #include "ghost.h"
 #include "godpassive.h" // passive_t::no_haste
 #include "godwrath.h"
@@ -2104,10 +2104,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_FAMINE:
-        if (you_foodless())
-            mpr("You feel rather smug.");
-        else
-            set_hunger(min(you.hunger, HUNGER_STARVING / 2), true);
+        mpr("You reflect on the poor and hungry.");
         break;
 
     case CARD_SWINE:

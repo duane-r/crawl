@@ -15,7 +15,6 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
-butcher.o \
 bloodspatter.o \
 chardump.o \
 cio.o \
@@ -67,7 +66,6 @@ feature.o \
 fight.o \
 files.o \
 fineff.o \
-food.o \
 format.o \
 fprop.o \
 game-options.o \

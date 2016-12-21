@@ -12,7 +12,7 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "food.h"
+
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -370,10 +370,7 @@ static int you_gold(lua_State *ls)
 
 static int you_can_consume_corpses(lua_State *ls)
 {
-    lua_pushboolean(ls,
-                     player_mutation_level(MUT_HERBIVOROUS) < 3
-                     && !you_foodless(true)
-                  );
+    lua_pushboolean(ls, false);
     return 1;
 }
 

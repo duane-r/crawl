@@ -15,7 +15,7 @@
 #include "database.h"
 #include "describe.h"
 #include "english.h"
-#include "food.h"
+#include "items.h"
 #include "godabil.h"
 #include "godconduct.h"
 #include "godpassive.h"
@@ -897,7 +897,7 @@ static void _describe_god_powers(god_type which_god)
                 uppercase_first(god_name(which_god)).c_str());
         cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        if (!you_foodless_normally())
+        if (!you_potionless(false))
         {
             if (have_passive(passive_t::bottle_mp))
                 textcolour(god_colour(which_god));

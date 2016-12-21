@@ -18,7 +18,6 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "dungeon.h"
-#include "food.h"
 #include "goditem.h"
 #include "godpassive.h"
 #include "itemname.h"
@@ -393,45 +392,6 @@ static armour_type _pick_unseen_armour()
     return picked;
 }
 
-static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
-{
-    int type_wanted;
-    // Food is a little less predictable now. - bwr
-    if (you.species == SP_GHOUL)
-        type_wanted = FOOD_CHUNK;
-    else if (you.species == SP_VAMPIRE)
-    {
-        // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
-        // but it's easier to just give them a potion of blood
-        // class type is set elsewhere
-        type_wanted = POT_BLOOD;
-    }
-    else if (you_worship(GOD_FEDHAS))
-    {
-        // Fedhas worshippers get fruit to use for growth and evolution
-        type_wanted = FOOD_FRUIT;
-    }
-    else
-    {
-        type_wanted = coinflip()
-            ? FOOD_ROYAL_JELLY
-            : player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
-                                                     : FOOD_MEAT_RATION;
-    }
-
-    quantity = 3 + random2(5);
-
-    // giving more of the lower food value items
-    if (type_wanted == FOOD_FRUIT)
-        quantity = 8 + random2avg(15, 2);
-    else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
-        quantity += 2 + random2avg(10, 2);
-    else if (type_wanted == POT_BLOOD)
-        quantity = 8 + random2(5);
-
-    return type_wanted;
-}
-
 /**
  * Randomly choose a class of weapons (those using a specific weapon skill)
  * for acquirement to give the player. Weight toward the player's skills.
@@ -788,10 +748,10 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_missile_subtype,
     _acquirement_armour_subtype,
     _acquirement_wand_subtype,
-    _acquirement_food_subtype,
+    0, // no food
     0, // no scrolls
     _acquirement_jewellery_subtype,
-    _acquirement_food_subtype, // potion acquirement = food for vampires
+    0, // potion acquirement = food for vampires
     0, // books handled elsewhere
     _acquirement_staff_subtype,
     0, // no, you can't acquire the orb
@@ -1534,8 +1494,6 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_WANDS);
     }
 
-    bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
-
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {
         { OBJ_WEAPONS,    "Weapon" },
@@ -1545,13 +1503,8 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_STAVES,     "Staff " },
         { OBJ_WANDS,      "Wand" },
         { OBJ_MISCELLANY, "Misc. Evocable" },
-        { OBJ_FOOD,       0 }, // amended below
         { OBJ_GOLD,       "Gold" },
     };
-    ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you_worship(GOD_FEDHAS) ? "Fruit":
-                          you.species == SP_VAMPIRE  ? "Blood":
-                                                       "Food";
 
     int thing_created = NON_ITEM;
 

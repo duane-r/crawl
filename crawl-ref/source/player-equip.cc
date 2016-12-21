@@ -11,7 +11,7 @@
 #include "delay.h"
 #include "english.h" // conjugate_verb
 #include "evoke.h"
-#include "food.h"
+
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
@@ -506,12 +506,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_VAMPIRISM:
-                    if (you.species == SP_VAMPIRE)
-                        mpr("You feel a bloodthirsty glee!");
-                    else if (you.undead_state() == US_ALIVE && !you_foodless())
-                        mpr("You feel a dreadful hunger.");
-                    else
-                        mpr("You feel an empty sense of dread.");
+                    mpr("You feel a bloodthirsty glee!");
                     break;
 
                 case SPWPN_PAIN:
@@ -576,16 +571,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             // effect second
             switch (special)
             {
-            case SPWPN_VAMPIRISM:
-                if (you.species != SP_VAMPIRE
-                    && you.undead_state() == US_ALIVE
-                    && !you_foodless()
-                    && !unmeld)
-                {
-                    make_hungry(4500, false, false);
-                }
-                break;
-
             case SPWPN_DISTORTION:
                 if (!was_known)
                 {

@@ -118,7 +118,6 @@ static dump_section_handler dump_handlers[] =
     { "stats",          _sdump_stats         },
     { "location",       _sdump_location      },
     { "religion",       _sdump_religion      },
-    { "hunger",         _sdump_hunger        },
     { "transform",      _sdump_transform     },
     { "visits",         _sdump_visits        },
     { "gold",           _sdump_gold          },
@@ -216,13 +215,6 @@ static void _sdump_stats(dump_params &par)
 
 static void _sdump_hunger(dump_params &par)
 {
-    if (par.se)
-        par.text += "You were ";
-    else
-        par.text += "You are ";
-
-    par.text += hunger_level();
-    par.text += ".\n\n";
 }
 
 static void _sdump_transform(dump_params &par)
@@ -785,7 +777,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power        Failure   Level  Hunger" "\n";
+        text += " Your Spells              Type           Power        Failure   Level" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -826,7 +818,6 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
-                spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
 
                 text += spell_line;
@@ -1042,8 +1033,6 @@ static string _describe_action(caction_type type)
         return "  Use";
     case CACT_STAB:
         return " Stab";
-    case CACT_EAT:
-        return "  Eat";
     case CACT_RIPOSTE:
         return "Rpst.";
     default:
@@ -1187,9 +1176,6 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
         ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
-    case CACT_EAT:
-        return subtype >= 0 ? uppercase_first(food_type_name(subtype))
-                            : "Corpse";
     default:
         return "Error";
     }
@@ -1368,8 +1354,8 @@ const char *hunger_level()
     ASSERT(you.hunger_state <= HS_ENGORGED);
 
     if (you.species == SP_VAMPIRE)
-        return thirst_names[you.hunger_state];
-    return hunger_names[you.hunger_state];
+        return "not thirsty";
+    return "not hungry";
 }
 
 string morgue_directory()

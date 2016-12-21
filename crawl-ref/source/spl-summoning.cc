@@ -13,7 +13,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
-#include "butcher.h"
+
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -1758,9 +1758,6 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         if (!_animatable_remains(*si))
             continue;
 
-        const bool was_draining = is_being_drained(*si);
-        const bool was_butchering = is_being_butchered(*si);
-
         const bool success = _raise_remains(a, si.index(), beha, hitting,
                                             as, nas, god, actual,
                                             force_beh, mon, &motions);
@@ -1768,20 +1765,8 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         if (actual && success)
         {
             // Ignore quiet.
-            if (was_butchering || was_draining)
-            {
-                mprf("The corpse you are %s rises to %s!",
-                     was_draining ? "drinking from"
-                                  : "butchering",
-                     beha == BEH_FRIENDLY ? "join your ranks"
-                                          : "attack");
-            }
-
             if (!quiet && you.see_cell(a))
                 _display_undead_motions(motions);
-
-            if (was_butchering)
-                xom_is_stimulated(200);
         }
 
         any_success |= success;
@@ -1875,7 +1860,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             && mons_skeleton(si->mon_type)
             && mons_class_can_be_zombified(si->mon_type))
         {
-            butcher_corpse(*si, MB_TRUE);
+            turn_corpse_into_skeleton(*si);
             mpr("Before your eyes, flesh is ripped from the corpse!");
             request_autopickup();
             // Only convert the top one.
@@ -1968,8 +1953,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             // No monster to conj_verb with :(
             mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
                  how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
-            if (!turn_corpse_into_skeleton(corpse))
-                butcher_corpse(corpse, MB_FALSE, false);
+            turn_corpse_into_skeleton(corpse);
             return SPRET_SUCCESS;
         }
         mg.props[MGEN_NUM_HEADS] = corpse.props[CORPSE_HEADS].get_short();
@@ -1987,8 +1971,8 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 
     if (!count)
         canned_msg(MSG_NOTHING_HAPPENS);
-    else if (!turn_corpse_into_skeleton(corpse))
-        butcher_corpse(corpse, MB_FALSE, false);
+    else
+       turn_corpse_into_skeleton(corpse);
 
     return SPRET_SUCCESS;
 }
@@ -2044,8 +2028,6 @@ bool monster_simulacrum(monster *mon, bool actual)
                                   div_rand_round(
                                     max_corpse_chunks(si->mon_type), 2));
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
-            bool was_draining = is_being_drained(*si);
-            bool was_butchering = is_being_butchered(*si);
             bool was_successful = false;
             for (int i = 0; i < how_many; ++i)
             {
@@ -2065,14 +2047,6 @@ bool monster_simulacrum(monster *mon, bool actual)
             {
                 did_creation = true;
                 turn_corpse_into_skeleton(*si);
-                // Ignore quiet.
-                if (was_butchering || was_draining)
-                {
-                    mprf("The flesh of the corpse you are %s vaporises!",
-                         was_draining ? "drinking from" : "butchering");
-                    xom_is_stimulated(200);
-                }
-
             }
         }
     }

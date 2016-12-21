@@ -25,7 +25,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "fight.h" // melee_confuse_chance
-#include "food.h"
+
 #include "godabil.h"
 #include "hints.h"
 #include "invent.h"

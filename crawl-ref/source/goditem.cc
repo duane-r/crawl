@@ -16,7 +16,7 @@
 
 #include "artefact.h"
 #include "art-enum.h"
-#include "food.h"
+
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -514,9 +514,6 @@ conduct_type god_hates_item_handling(const item_def &item)
         // long as you don't eat the chunks. This check must come before the
         // item_type_known() check because the latter returns false for food
         // (and other item types without identification).
-        if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && is_mutagenic(item))
-            return DID_DELIBERATE_MUTATING;
-
         if (!item_type_known(item))
             return DID_NOTHING;
 

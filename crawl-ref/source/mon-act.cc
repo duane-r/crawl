@@ -12,7 +12,7 @@
 #include "arena.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
-#include "butcher.h"
+
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"

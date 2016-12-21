@@ -17,7 +17,7 @@
 #include "art-enum.h"
 #include "pcg.h" // for make_name()'s use
 #include "branch.h"
-#include "butcher.h"
+
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
@@ -28,7 +28,6 @@
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
 #include "evoke.h"
-#include "food.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -1873,18 +1872,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
-            switch (determine_chunk_effect(*this))
-            {
-                case CE_MUTAGEN:
-                    buff << "mutagenic ";
-                    break;
-                case CE_NOXIOUS:
-                    buff << "inedible ";
-                    break;
-                default:
-                    break;
-            }
-
             buff << "chunk of flesh";
             break;
 #if TAG_MAJOR_VERSION == 34
@@ -3605,8 +3592,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case POT_BERSERK_RAGE:
             return you.undead_state(temp)
-                   && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state < HS_SATIATED)
                    || you.species == SP_FORMICID;
         case POT_HASTE:
             return you.species == SP_FORMICID;
@@ -3622,9 +3607,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_safely_mutate(temp);
 
         case POT_LIGNIFY:
-            return you.undead_state(temp)
-                   && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state < HS_SATIATED);
+            return you.undead_state(temp);
 
         case POT_FLIGHT:
             return you.permanent_flight();
@@ -3670,8 +3653,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case AMU_RAGE:
             return you.undead_state(temp)
-                   && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state < HS_SATIATED)
                    || you.species == SP_FORMICID
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
@@ -3696,9 +3677,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
-                   || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state <= HS_STARVING;
+            return (player_mutation_level(MUT_SLOW_REGENERATION) == 3);
 
         case AMU_MANA_REGENERATION:
             return you_worship(GOD_PAKELLAS);
@@ -3774,27 +3753,12 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == NUM_FOODS)
             break;
 
-        if (!is_inedible(item))
-            return false;
-
-        if (!temp && you.form == TRAN_LICH)
-        {
-            // See what would happen if we were in our normal state.
-            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
-
-            if (!is_inedible(item))
-                return false;
-        }
-
         if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;
 
         return true;
 
     case OBJ_CORPSES:
-        if (item.sub_type != CORPSE_SKELETON && !you_foodless())
-            return false;
-
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.has_spell(SPELL_SIMULACRUM)
@@ -3893,44 +3857,12 @@ string item_prefix(const item_def &item, bool temp)
 
     switch (item.base_type)
     {
-    case OBJ_CORPSES:
-        // Skeletons cannot be eaten.
-        if (item.sub_type == CORPSE_SKELETON)
-        {
-            prefixes.push_back("inedible");
-            break;
-        }
-        // intentional fall-through
-    case OBJ_FOOD:
-        // this seems like a big horrible gotcha waiting to happen
-        if (item.sub_type == NUM_FOODS)
-            break;
-
-        if (is_inedible(item))
-            prefixes.push_back("inedible");
-        else if (is_preferred_food(item))
-            prefixes.push_back("preferred");
-
-        if (is_forbidden_food(item))
-            prefixes.push_back("forbidden");
-
-        if (is_mutagenic(item))
-            prefixes.push_back("mutagenic");
-        else if (is_noxious(item))
-            prefixes.push_back("inedible");
-        break;
-
     case OBJ_POTIONS:
         if (is_good_god(you.religion) && item_type_known(item)
             && is_blood_potion(item))
         {
             prefixes.push_back("evil_eating");
             prefixes.push_back("forbidden");
-        }
-        if (is_preferred_food(item))
-        {
-            prefixes.push_back("preferred");
-            prefixes.push_back("food");
         }
         break;
 

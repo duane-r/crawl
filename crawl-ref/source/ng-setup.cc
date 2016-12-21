@@ -8,7 +8,6 @@
 #include "dungeon.h"
 #include "end.h"
 #include "files.h"
-#include "food.h"
 #include "godcompanions.h"
 #include "hints.h"
 #include "invent.h"
@@ -319,31 +318,11 @@ static void _give_items_skills(const newgame_def& ng)
     }
 
     if (you.species == SP_HUMAN)
-			newgame_make_item(OBJ_POTIONS, POT_BENEFICIAL_MUTATION, 5);
+      newgame_make_item(OBJ_POTIONS, POT_BENEFICIAL_MUTATION, 5);
 }
 
 static void _give_starting_food()
 {
-    // No food for those who don't need it.
-    if (you_foodless())
-        return;
-
-    object_class_type base_type = OBJ_FOOD;
-    int sub_type = FOOD_BREAD_RATION;
-    int quantity = 1;
-    if (you.species == SP_VAMPIRE)
-    {
-        base_type = OBJ_POTIONS;
-        sub_type  = POT_BLOOD;
-    }
-    else if (player_mutation_level(MUT_CARNIVOROUS))
-        sub_type = FOOD_MEAT_RATION;
-
-    // Give another one for hungry species.
-    if (player_mutation_level(MUT_FAST_METABOLISM))
-        quantity = 2;
-
-    newgame_make_item(base_type, sub_type, quantity);
 }
 
 static void _setup_tutorial_miscs()
@@ -422,7 +401,6 @@ void setup_game(const newgame_def& ng)
  */
 static void _setup_normal_game()
 {
-    make_hungry(0, true);
 }
 
 /**
@@ -430,7 +408,6 @@ static void _setup_normal_game()
  */
 static void _setup_tutorial(const newgame_def& ng)
 {
-    make_hungry(0, true);
 }
 
 /**

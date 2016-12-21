@@ -155,9 +155,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
-        new BoolGameOption(SIMPLE_NAME(auto_butcher), false),
-        new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
-        new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), true),
@@ -803,16 +800,11 @@ void game_options::set_default_activity_interrupts()
         "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
-        "interrupt_eat = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
-        "interrupt_butcher = interrupt_armour_on, teleport, stat",
-        "interrupt_bottle_blood = interrupt_butcher",
-        "interrupt_vampire_feed = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hungry, hit_monster, "
-                            "sense_monster",
+        "interrupt_travel = hit_monster, sense_monster",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp",
 
@@ -1006,10 +998,8 @@ void game_options::reset_options()
     autopickups.set(OBJ_BOOKS);
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
-    autopickups.set(OBJ_FOOD);
     autopickups.set(OBJ_RODS);
 
-    confirm_butcher        = CONFIRM_AUTO;
     easy_confirm           = CONFIRM_SAFE_EASY;
     allow_self_target      = CONFIRM_PROMPT;
     skill_focus            = SKM_FOCUS_ON;
@@ -2584,15 +2574,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             allow_self_target = CONFIRM_CANCEL;
         else if (field == "prompt")
             allow_self_target = CONFIRM_PROMPT;
-    }
-    else if (key == "confirm_butcher")
-    {
-        if (field == "always")
-            confirm_butcher = CONFIRM_ALWAYS;
-        else if (field == "never")
-            confirm_butcher = CONFIRM_NEVER;
-        else if (field == "auto")
-            confirm_butcher = CONFIRM_AUTO;
     }
     else if (key == "lua_file" && runscript)
     {

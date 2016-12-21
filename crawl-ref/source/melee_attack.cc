@@ -16,7 +16,7 @@
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
-#include "butcher.h"
+
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -25,7 +25,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "fineff.h"
-#include "food.h"
+
 #include "godconduct.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::convert_orcs
@@ -486,7 +486,7 @@ bool melee_attack::handle_phase_hit()
 bool melee_attack::handle_phase_damaged()
 {
   // Shroud is an evasion bonus now.
-#if 0	
+#if 0
     bool shroud_broken = false;
 
     // TODO: Move this somewhere else, this is a terrible place for a
@@ -573,18 +573,7 @@ bool melee_attack::handle_phase_aux()
  */
 static void _hydra_devour(monster &victim)
 {
-    // what's the highest hunger level this lets the player get to?
-    const hunger_state_t max_hunger =
-        static_cast<hunger_state_t>(HS_SATIATED + player_likes_chunks());
-
-    // will eating this actually fill the player up?
-    const bool filling = !have_passive(passive_t::goldify_corpses)
-                          && player_mutation_level(MUT_HERBIVOROUS, false) < 3
-                          && you.hunger_state <= max_hunger
-                          && you.hunger_state < HS_ENGORGED;
-
-    mprf("You %sdevour %s!",
-         filling ? "hungrily " : "",
+    mprf("You devour %s!",
          victim.name(DESC_THE).c_str());
 
     // give a clearer message for eating invisible things
@@ -599,14 +588,6 @@ static void _hydra_devour(monster &victim)
     }
     if (victim.has_ench(ENCH_STICKY_FLAME))
         mprf("Spicy!");
-
-    // nutrition (maybe)
-    if (filling)
-    {
-        const int equiv_chunks =
-            1 + random2(max_corpse_chunks(victim.type));
-        lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false, max_hunger);
-    }
 
     // healing
     if (!you.duration[DUR_DEATHS_DOOR])
@@ -635,7 +616,7 @@ static void _hydra_consider_devouring(monster &defender)
     dprf("considering devouring");
 
     // no unhealthy food
-    if (determine_chunk_effect(mons_corpse_effect(defender.type)) != CE_CLEAN)
+    if (mons_corpse_effect(defender.type) != CE_CLEAN)
         return;
 
     dprf("chunk ok");
@@ -1460,9 +1441,6 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 {
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
-
-    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-        damage -= random2(5);
 
     return damage;
 }
@@ -2694,10 +2672,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HUNGER:
-        if (defender->holiness() & MH_UNDEAD)
-            break;
-
-        defender->make_hungry(you.hunger / 4, false);
         break;
 
     case AF_BLINK:
@@ -3461,9 +3435,6 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     if (player_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
 
-    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-        your_to_hit -= 3;
-
     your_to_hit += slaying_bonus();
 
     return your_to_hit;
@@ -3583,17 +3554,12 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         }
     }
 
-    // Gain nutrition.
-    if (you.hunger_state != HS_ENGORGED)
-        lessen_hunger(30 + random2avg(59, 2), false);
-
     return true;
 }
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.species == SP_VAMPIRE
-           && you.hunger_state < HS_SATIATED
            && !mon->is_summoned()
            && mons_has_blood(mon->type)
            && !testbits(mon->flags, MF_SPECTRALISED);

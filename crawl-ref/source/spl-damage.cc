@@ -10,7 +10,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
-#include "butcher.h"
+
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -18,7 +18,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
-#include "food.h"
+
 #include "fprop.h"
 #include "godabil.h"
 #include "godconduct.h"

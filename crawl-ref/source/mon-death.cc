@@ -14,7 +14,7 @@
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
-#include "butcher.h"
+
 #include "cloud.h"
 #include "cluautil.h"
 #include "colour.h"
@@ -27,7 +27,7 @@
 #include "english.h"
 #include "env.h"
 #include "fineff.h"
-#include "food.h"
+
 #include "godabil.h"
 #include "godblessing.h"
 #include "godcompanions.h"
@@ -193,17 +193,8 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
     // Don't let the player evade food conducts by using OOD (!) or /disint
     // Spray blood, but no chunks. (The mighty hand of your God squashes them
     // in mid-flight...!)
-    if (is_forbidden_food(corpse))
-        return true;
-
-    // turn the corpse into chunks
     if (corpse.base_type != OBJ_GOLD)
-    {
-        corpse.base_type = OBJ_FOOD;
-        corpse.sub_type  = FOOD_CHUNK;
-        if (is_bad_food(corpse))
-            corpse.flags |= ISFLAG_DROPPED;
-    }
+        return true;
 
     const int total_gold = corpse.quantity;
 
@@ -232,8 +223,7 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
 
         dprf("Success");
 
-        if (corpse.base_type == OBJ_GOLD)
-            corpse.quantity = div_rand_round(total_gold, nchunks);
+        corpse.quantity = div_rand_round(total_gold, nchunks);
         if (corpse.quantity)
             copy_item_to_grid(corpse, cp);
     }
@@ -2317,8 +2307,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
                 // perhaps this should go to its own function
                 if (mp_heal
-                    && have_passive(passive_t::bottle_mp)
-                    && !you_foodless_normally())
+                    && have_passive(passive_t::bottle_mp))
                 {
                     simple_god_message(" collects the excess magic power.");
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;

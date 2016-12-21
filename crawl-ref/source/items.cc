@@ -22,7 +22,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "bitary.h"
-#include "butcher.h"
+
 #include "cio.h"
 #include "clua.h"
 #include "colour.h"
@@ -38,7 +38,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
-#include "food.h"
+
 #include "godpassive.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -82,6 +82,15 @@
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
+
+bool you_potionless(bool can_drink)
+{
+    return you.undead_state() == US_UNDEAD
+#if TAG_MAJOR_VERSION == 34
+        || you.species == SP_DJINNI && !can_drink
+#endif
+        ;
+}
 
 /**
  * Return an item's location (floor or inventory) and the corresponding mitm
@@ -128,6 +137,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
+
 
 static inline string _autopickup_item_name(const item_def &item)
 {
@@ -1531,12 +1541,6 @@ bool items_similar(const item_def &item1, const item_def &item2)
         return false;
     }
 
-    if (item1.is_type(OBJ_FOOD, FOOD_CHUNK)
-        && determine_chunk_effect(item1) != determine_chunk_effect(item2))
-    {
-        return false;
-    }
-
 
 #define NO_MERGE_FLAGS (ISFLAG_MIMIC | ISFLAG_SUMMONED)
     if ((item1.flags & NO_MERGE_FLAGS) != (item2.flags & NO_MERGE_FLAGS))
@@ -2849,13 +2853,6 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
     return Options.autopickups[item.base_type];
 }
 
-/// Should the player automatically butcher the given item?
-static bool _should_autobutcher(const item_def &item)
-{
-    return Options.auto_butcher && item.base_type == OBJ_CORPSES
-           && !is_inedible(item) && !is_bad_food(item);
-}
-
 /** Is the item something that we should try to autopickup?
  *
  * @param ignore_force If true, ignore force_autopickup settings from the
@@ -2866,10 +2863,6 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
     if (in_inventory(item))
         return false;
-
-    // mark autobutcher corpses for pickup so autotravel works
-    if (_should_autobutcher(item))
-        return true;
 
     if (item_is_stationary(item))
         return false;
@@ -2910,12 +2903,6 @@ static bool _identical_types(const item_def& pickup_item,
                              const item_def& inv_item)
 {
     return pickup_item.is_type(inv_item.base_type, inv_item.sub_type);
-}
-
-static bool _edible_food(const item_def& pickup_item,
-                         const item_def& inv_item)
-{
-    return inv_item.base_type == OBJ_FOOD && !is_inedible(inv_item);
 }
 
 static bool _similar_equip(const item_def& pickup_item,
@@ -3054,11 +3041,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         if (you_worship(GOD_FEDHAS) && is_fruit(item))
             return true;
 
-        if (is_inedible(item))
-            return false;
-
-        // Interesting if we don't have any other edible food.
-        return _item_different_than_inv(item, _edible_food);
+        return false;
 
     case OBJ_RODS:
         // Rods are always interesting, even if you already have one of
@@ -3126,17 +3109,6 @@ static void _do_autopickup()
 
         if (item_needs_autopickup(mi))
         {
-            if (_should_autobutcher(mi))
-            {
-                if (you_are_delayed() && current_delay()->want_autoeat())
-                    butchery(&mi);
-                else
-                {
-                    o = next;
-                    continue;
-                }
-            }
-
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
             // will always return false.

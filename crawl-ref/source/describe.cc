@@ -20,7 +20,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "database.h"
@@ -32,7 +32,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "fight.h"
-#include "food.h"
 #include "ghost.h"
 #include "godabil.h"
 #include "goditem.h"
@@ -1855,45 +1854,11 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
     case OBJ_CORPSES:
-        if (item.sub_type == CORPSE_SKELETON)
-            break;
-
-        // intentional fall-through
-    case OBJ_FOOD:
-        if (item.base_type == OBJ_FOOD)
-        {
-            description << "\n\n";
-
-            const int turns = food_turns(item);
-            ASSERT(turns > 0);
-            if (turns > 1)
-            {
-                description << "It is large enough that eating it takes "
-                            << ((turns > 2) ? "several" : "a couple of")
-                            << " turns, during which time the eater is vulnerable"
-                               " to attack.";
-            }
-            else
-                description << "It is small enough that eating it takes "
-                               "only one turn.";
-        }
-        if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
-        {
-            switch (determine_chunk_effect(item))
-            {
-            case CE_MUTAGEN:
-                description << "\n\nEating this meat will cause random "
-                               "mutations.";
-                break;
-            case CE_NOXIOUS:
-                description << "\n\nThis meat is toxic.";
-                break;
-            default:
-                break;
-            }
-        }
         break;
 
+    case OBJ_FOOD:
+        break;
+    
     case OBJ_RODS:
         if (verbose)
         {
@@ -2234,8 +2199,6 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        if (can_eat(item, true, false))
-            actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
     //case OBJ_BOOKS: these are handled differently
@@ -2248,7 +2211,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (!you_foodless(true)) // mummies and lich form forbidden
+        if (!you_potionless(true)) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:
@@ -2280,7 +2243,6 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
         { CMD_WEAR_ARMOUR, "(w)ear" },
         { CMD_REMOVE_ARMOUR, "(t)ake off" },
         { CMD_EVOKE, "e(v)oke" },
-        { CMD_EAT, "(e)at" },
         { CMD_READ, "(r)ead" },
         { CMD_WEAR_JEWELLERY, "(p)ut on" },
         { CMD_REMOVE_JEWELLERY, "(r)emove" },
@@ -2312,7 +2274,6 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_WEAR_ARMOUR,      'w' },
         { CMD_REMOVE_ARMOUR,    't' },
         { CMD_EVOKE,            'v' },
-        { CMD_EAT,              'e' },
         { CMD_READ,             'r' },
         { CMD_WEAR_JEWELLERY,   'p' },
         { CMD_REMOVE_JEWELLERY, 'r' },
@@ -2357,7 +2318,6 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
     case CMD_EVOKE:            evoke_item(slot);                    break;
-    case CMD_EAT:              eat_food(slot);                      break;
     case CMD_READ:             read(&item);                         break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;
@@ -2506,8 +2466,6 @@ static string _player_spell_stats(const spell_type spell, bool rod)
     description += spell_power_string(spell, rod);
     description += "\nRange : ";
     description += spell_range_string(spell, rod);
-    description += "\nHunger: ";
-    description += spell_hunger_string(spell, rod);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";

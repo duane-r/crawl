@@ -542,10 +542,6 @@ void hints_dissection_reminder()
 
     if (Hints.hints_just_triggered)
         return;
-
-    // When hungry, give appropriate message
-    if (you.hunger_state < HS_SATIATED)
-        learned_something_new(HINT_MAKE_CHUNKS);
 }
 
 static bool _advise_use_healing_potion()
@@ -1278,56 +1274,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "special properties, good or bad.";
         break;
 
-    case HINT_SEEN_FOOD:
-            text << "You have picked up some food"
-            "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
-             << "</w>')</console>"
-                ". You can eat it by typing <w>e</w>"
-                "<tiles> or by <w>left-clicking</w> on it</tiles>"
-                ". However, it is usually best to conserve rations and fruit, "
-                "since raw meat from corpses is generally plentiful.";
-        break;
-
-    case HINT_SEEN_CARRION:
-        // TODO: Specialcase skeletons!
-
-        if (gc.x <= 0 || gc.y <= 0) // XXX: only relevant for carrion shops?
-            text << "Ah, a corpse!";
-        else
-        {
-            int i = you.visible_igrd(gc);
-            if (i == NON_ITEM)
-                text << "Ah, a corpse!";
-            else
-            {
-                text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(mitm[i]));
-                const string::size_type found = glyph.find("%");
-                if (found != string::npos)
-                    glyph.replace(found, 1, "percent");
-                text << glyph << " ";
-                text << "</console>is a corpse.";
-#ifdef USE_TILE
-                tiles.place_cursor(CURSOR_TUTORIAL, gc);
-                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
-#endif
-            }
-        }
-
-        text << " When a corpse is lying on the ground, you "
-                "can <w>%</w>hop it up. Once hungry, you can "
-                "then <w>%</w>at the resulting chunks.";
-        cmd.push_back(CMD_BUTCHER);
-        cmd.push_back(CMD_EAT);
-
-        text << "<tiles> You can also chop up any corpse that shows up in "
-                "the floor part of your inventory region, simply by "
-                "<w>left-clicking</w> on it while pressing <w>Shift</w>, and "
-                "then eat the resulting chunks with <w>Shift + right-mouse</w>"
-                ".</tiles>";
-        break;
-
     case HINT_SEEN_JEWELLERY:
         text << "You have picked up a a piece of jewellery, either a ring"
              << "<console> ('<w>"
@@ -1811,29 +1757,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "can now unequip any previously cursed items.";
         break;
 
-    case HINT_YOU_HUNGRY:
-        text << "There are two ways to overcome hunger: food you started "
-                "with or found, and self-made chunks from corpses. To get the "
-                "latter, all you need to do is <w>%</w>hop up a corpse. "
-                "Luckily, all adventurers carry a pocket knife with them "
-                "which is perfect for butchering. Try to dine on chunks in "
-                "order to save permanent food.";
-        if (Hints.hints_type == HINT_BERSERK_CHAR)
-            text << "\nNote that you cannot Berserk while starving or near starving.";
-        cmd.push_back(CMD_BUTCHER);
-        break;
-
-    case HINT_YOU_STARVING:
-        text << "You are now suffering from terrible hunger. You'll need to "
-                "<w>%</w>at something quickly, or you'll die. The safest "
-                "way to deal with this is to simply eat something from your "
-                "inventory, rather than wait for a monster to leave a corpse.";
-        cmd.push_back(CMD_EAT);
-
-        if (Hints.hints_type == HINT_MAGIC_CHAR)
-            text << "\nNote that you cannot cast spells while starving.";
-        break;
-
     case HINT_MULTI_PICKUP:
         text << "There are a lot of items here. You choose what to pick up "
                 "from a menu: type <w>%</w> "
@@ -1857,16 +1780,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "items to drop by pressing their inventory letter, or by "
                 "clicking on them.";
 #endif
-        break;
-
-    case HINT_MAKE_CHUNKS:
-        text << "How lucky! That monster left a corpse which you can now "
-                "<w>%</w>hop up, producing chunks that you can then "
-                "<w>%</w>at. Some monsters are inedible or or even mutagenic,"
-                "but their chunks will be named accordingly, so don't worry "
-                "about any surprises in the food!";
-        cmd.push_back(CMD_BUTCHER);
-        cmd.push_back(CMD_EAT);
         break;
 
     case HINT_SHIFT_RUN:
@@ -2556,18 +2469,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "of MP and nutrition that a successfully cast spell would.";
         break;
     }
-            // XXX: remove this?
+
     case HINT_SPELL_HUNGER:
-        text << "The spell you just cast made you hungrier; you can see how "
-                "hungry spells make you by "
-#ifdef USE_TILE
-                "examining your spells in the spell display, or by "
-#endif
-                "entering <w>%\?!</w> or <w>%I</w>. "
-                "The amount of nutrition consumed increases with the level of "
-                "the spell and decreases depending on your intelligence stat "
-                "and your Spellcasting skill. If both of these are high "
-                "enough a spell might even not cost you any nutrition at all.";
         cmd.push_back(CMD_CAST_SPELL);
         cmd.push_back(CMD_DISPLAY_SPELLS);
         break;
@@ -2695,7 +2598,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_GAINED_SPELLCASTING:
         text << "As your Spellcasting skill increases, you will be able to "
-             << "memorise more spells, and will suffer less hunger and "
+             << "memorise more spells, and will suffer "
              << "somewhat fewer failures when you cast them.\n"
              << "Press <w>%</w> "
 #ifdef USE_TILE_LOCAL
@@ -2721,7 +2624,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_ANIMATE_CORPSE_SKELETON:
         text << "Animate Skeleton works on the corpse of any monster that has "
-                "a skeleton inside, and will also butcher them automatically.";
+                "a skeleton inside.";
         break;
     default:
         text << "You've found something new (but I don't know what)!";
@@ -3213,23 +3116,6 @@ string hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_WAND] = false;
             break;
 
-        case OBJ_FOOD:
-            ostr << "Food can simply be <w>%</w>aten"
-#ifdef USE_TILE
-                    ", something you can also do by <w>left clicking</w> "
-                    "on it"
-#endif
-                    ". ";
-            cmd.push_back(CMD_EAT);
-
-            if (item.sub_type == FOOD_CHUNK)
-            {
-                ostr << "Note that most species refuse to eat raw meat "
-                        "unless hungry. ";
-            }
-            Hints.hints_events[HINT_SEEN_FOOD] = false;
-            break;
-
         case OBJ_SCROLLS:
             ostr << "Type <w>%</w> to read this scroll"
 #ifdef USE_TILE
@@ -3380,21 +3266,6 @@ string hints_describe_item(const item_def &item)
             }
             ostr << "\n";
             Hints.hints_events[HINT_SEEN_SPBOOK] = false;
-            break;
-
-        case OBJ_CORPSES:
-            Hints.hints_events[HINT_SEEN_CARRION] = false;
-
-            if (item.sub_type == CORPSE_SKELETON)
-            {
-                ostr << "Skeletons can be used as components for certain "
-                        "necromantic spells. Apart from that, they are "
-                        "largely useless.";
-                break;
-            }
-
-            ostr << "Most corpses can be <w>%</w>hopped into edible chunks.";
-            cmd.push_back(CMD_BUTCHER);
             break;
 
         case OBJ_RODS:

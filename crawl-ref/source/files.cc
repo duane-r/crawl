@@ -29,7 +29,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "branch.h"
-#include "butcher.h" // for fedhas_rot_all_corpses
+
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"

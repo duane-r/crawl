@@ -17,7 +17,7 @@
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -29,7 +29,7 @@
 #include "english.h"
 #include "fight.h"
 #include "files.h"
-#include "food.h"
+
 #include "format.h" // formatted_string
 #include "godblessing.h"
 #include "godcompanions.h"
@@ -4177,9 +4177,6 @@ static int _gozag_max_shops()
 {
     const int max_non_food_shops = 3;
 
-    // add a food shop if you can eat (non-mu/dj)
-    if (!you_foodless_normally())
-        return max_non_food_shops + 1;
     return max_non_food_shops;
 }
 
@@ -4276,9 +4273,6 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
     shop_type type = NUM_SHOPS;
-    if (index == 0 && !you_foodless_normally())
-        type = SHOP_FOOD;
-    else
     {
         int choice = random2(valid_shops.size());
         type = valid_shops[choice];
@@ -4312,14 +4306,6 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
  */
 static string _gozag_special_shop_name(shop_type type)
 {
-    if (type == SHOP_FOOD)
-    {
-        if (you.species == SP_VAMPIRE)
-            return "Blood";
-        else if (you.species == SP_GHOUL)
-            return "Carrion"; // yum!
-    }
-
     return "";
 }
 

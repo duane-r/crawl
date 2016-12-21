@@ -17,7 +17,6 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
-#include "food.h"
 #include "godabil.h" // RU_SAC_XP_LEVELS
 #include "godconduct.h"
 #include "goditem.h"
@@ -439,10 +438,6 @@ item_def *player::shield() const
 
 void player::make_hungry(int hunger_increase, bool silent)
 {
-    if (hunger_increase > 0)
-        ::make_hungry(hunger_increase, silent);
-    else if (hunger_increase < 0)
-        ::lessen_hunger(-hunger_increase, silent);
 }
 
 string player::name(description_level_type dt, bool, bool) const

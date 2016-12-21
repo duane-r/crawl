@@ -12,7 +12,7 @@
 #include "describe.h"
 #include "env.h"
 #include "files.h"
-#include "food.h"
+
 #include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2197,19 +2197,7 @@ static tileidx_t _tileidx_armour(const item_def &item)
 
 static tileidx_t _tileidx_chunk(const item_def &item)
 {
-    if (is_inedible(item))
-        return TILE_FOOD_CHUNK_INEDIBLE;
-
-    if (is_mutagenic(item))
-        return TILE_FOOD_CHUNK_MUTAGENIC;
-
-    if (is_noxious(item))
-        return TILE_FOOD_CHUNK_ROTTING;
-
-    if (is_forbidden_food(item))
-        return TILE_FOOD_CHUNK_FORBIDDEN;
-
-    return TILE_FOOD_CHUNK;
+    return TILE_FOOD_CHUNK_INEDIBLE;
 }
 
 static tileidx_t _tileidx_food(const item_def &item)
@@ -3087,8 +3075,6 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_INVENTORY;
     case CMD_CAST_SPELL:
         return TILEG_CMD_CAST_SPELL;
-    case CMD_BUTCHER:
-        return TILEG_CMD_BUTCHER;
     case CMD_MEMORISE_SPELL:
         return TILEG_CMD_MEMORISE_SPELL;
     case CMD_DROP:
@@ -3563,23 +3549,6 @@ tileidx_t tileidx_known_brand(const item_def &item)
 
 tileidx_t tileidx_corpse_brand(const item_def &item)
 {
-    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        return 0;
-
-    // Vampires are only interested in fresh blood.
-    if (you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type))
-        return TILE_FOOD_INEDIBLE;
-
-    // Harmful chunk effects > religious rules > reduced nutrition.
-    if (is_mutagenic(item))
-        return TILE_FOOD_MUTAGENIC;
-
-    if (is_noxious(item))
-        return TILE_FOOD_ROTTING;
-
-    if (is_forbidden_food(item))
-        return TILE_FOOD_FORBIDDEN;
-
     return 0;
 }
 

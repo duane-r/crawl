@@ -20,7 +20,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "env.h"
-#include "food.h"
+
 #include "goditem.h"
 #include "godpassive.h"
 #include "initfile.h"
@@ -1039,7 +1039,7 @@ bool item_is_selected(const item_def &i, int selector)
         return is_enchantable_armour(i, true);
 
     case OBJ_FOOD:
-        return itype == OBJ_FOOD && !is_inedible(i);
+        return false;
 
     case OSEL_DRAW_DECK:
         return is_deck(i);
@@ -1599,15 +1599,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
             && !have_passive(passive_t::safe_distortion))
-        {
-            return true;
-        }
-
-        if (get_weapon_brand(item) == SPWPN_VAMPIRISM
-            && you.undead_state() == US_ALIVE
-            && !you_foodless()
-            // Don't prompt if you aren't wielding it and you can't.
-            && (you.hunger_state >= HS_FULL || _is_wielded(item)))
         {
             return true;
         }

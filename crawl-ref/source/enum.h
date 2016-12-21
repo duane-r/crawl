@@ -845,7 +845,6 @@ enum caction_type    // Primary categorization of counted actions.
                      //   auxtype = item basetype, subtype = item subtype
     CACT_USE,        // object_class_type
     CACT_STAB,       // stab_type
-    CACT_EAT,        // food_type, or subtype = -1 for corpse
     CACT_ARMOUR,     // armour subtype or subtype = -1 for unarmoured
     CACT_DODGE,      // dodge_type
     CACT_BLOCK,      // armour subtype or subtype = -1 and
@@ -1010,7 +1009,6 @@ enum command_type
     CMD_PICKUP_QUANTITY,
     CMD_DROP,
     CMD_DROP_LAST,
-    CMD_BUTCHER,
     CMD_INSPECT_FLOOR,
     CMD_SHOW_TERRAIN,
     CMD_FULL_VIEW,
@@ -1036,7 +1034,6 @@ enum command_type
     CMD_FORCE_CAST_SPELL,
     CMD_MEMORISE_SPELL,
     CMD_USE_ABILITY,
-    CMD_EAT,
     CMD_QUAFF,
     CMD_READ,
     CMD_LOOK_AROUND,
@@ -1326,13 +1323,6 @@ enum conduct_type
     DID_CHANNEL,                          // Pakellas
     DID_HURT_FOE,                         // Uskayaw
     NUM_CONDUCTS
-};
-
-enum confirm_butcher_type
-{
-    CONFIRM_NEVER,
-    CONFIRM_ALWAYS,
-    CONFIRM_AUTO,
 };
 
 enum confirm_prompt_type
@@ -3918,7 +3908,6 @@ enum operation_types
     OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
-    OPER_BUTCHER  = 'c',
     OPER_ANY      = 0,
 };
 

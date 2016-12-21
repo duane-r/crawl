@@ -11,7 +11,7 @@
 #include <cstring>
 
 #include "cloud.h"
-#include "food.h"
+
 #include "godconduct.h"
 #include "godwrath.h" // reduce_xp_penance
 #include "hints.h"
@@ -236,7 +236,6 @@ public:
         if (you.species == SP_VAMPIRE)
         {
             mpr("Yummy - fresh blood!");
-            lessen_hunger(pow, true);
         }
         else
             mpr(_blood_flavour_message());
@@ -246,12 +245,6 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (you.hunger_state == HS_ENGORGED)
-        {
-            if (reason)
-                *reason = "You are much too full right now.";
-            return false;
-        }
         return true;
     }
 
@@ -651,7 +644,7 @@ public:
 
     bool effect(bool was_known = true, int pow = 40, bool=true) const override
     {
-        if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
+        if (you.species == SP_VAMPIRE)
         {
             mpr("You feel slightly irritated.");
             return false;
@@ -979,7 +972,6 @@ public:
         if (you.species == SP_VAMPIRE)
         {
             mpr("This tastes delicious.");
-            lessen_hunger(pow, true);
         }
         else
             mpr(_blood_flavour_message());
@@ -989,11 +981,6 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (you.hunger_state == HS_ENGORGED)
-        {
-            *reason = "You are much too full right now.";
-            return false;
-        }
         return true;
     }
 
@@ -1112,19 +1099,12 @@ public:
         else
         {
             mpr("That potion was really gluggy!");
-            lessen_hunger(6000, true);
         }
         return true;
     }
 
     bool can_quaff(string *reason) const override
     {
-        if (you.hunger_state == HS_ENGORGED)
-        {
-            if (reason)
-                *reason = "You are much too full right now.";
-            return false;
-        }
         return true;
     }
 };

@@ -28,7 +28,7 @@
 #include "env.h"
 #include "errors.h"
 #include "fight.h"
-#include "food.h"
+
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
@@ -2093,8 +2093,7 @@ bool flavour_triggers_damageless(attack_flavour flavour)
         || flavour == AF_PURE_FIRE
         || flavour == AF_SHADOWSTAB
         || flavour == AF_DROWN
-        || flavour == AF_CORRODE
-        || flavour == AF_HUNGER;
+        || flavour == AF_CORRODE;
 }
 
 /**

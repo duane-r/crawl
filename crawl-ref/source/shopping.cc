@@ -13,7 +13,7 @@
 
 #include "artefact.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "cio.h"
 #include "colour.h"
 #include "decks.h"
@@ -22,7 +22,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "food.h"
+
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"

@@ -14,7 +14,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "bloodspatter.h"
-#include "butcher.h"
+
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
@@ -26,7 +26,7 @@
 #include "env.h"
 #include "exclude.h"
 #include "exercise.h"
-#include "food.h"
+
 #include "fprop.h"
 #include "godabil.h"
 #include "godconduct.h"
@@ -83,7 +83,6 @@ private:
 
 int interrupt_block::interrupts_blocked = 0;
 
-static void _xom_check_corpse_waste();
 static const char *_activity_interrupt_name(activity_interrupt_type ai);
 
 void push_delay(shared_ptr<Delay> delay)
@@ -126,31 +125,6 @@ static void _clear_pending_delays(size_t after_index = 1)
     }
 }
 
-static void _interrupt_butchering(const char* action)
-{
-    const bool multiple_corpses =
-        // + 1 to avoid the first delay in the queue, which we know is
-        // butchering.
-        any_of(you.delay_queue.begin() + 1, you.delay_queue.end(),
-               [] (const shared_ptr<Delay> d)
-               {
-                   return d->is_butcher();
-               });
-    mprf("You stop %s the corpse%s.", action, multiple_corpses ? "s" : "");
-}
-
-bool BottleBloodDelay::try_interrupt()
-{
-    _interrupt_butchering("bottling blood from");
-    return true;
-}
-
-bool ButcherDelay::try_interrupt()
-{
-    _interrupt_butchering("butchering");
-    return true;
-}
-
 bool MemoriseDelay::try_interrupt()
 {
     // Losing work here is okay... having to start from
@@ -184,22 +158,6 @@ bool MacroDelay::try_interrupt()
     return true;
     // There's no special action needed for macros - if we don't call out
     // to the Lua function, it can't do damage.
-}
-
-bool EatDelay::try_interrupt()
-{
-    if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep eating?", true, 'N', false))
-        {
-            mpr("You stop eating.");
-            return true;
-        }
-        else
-            was_prompted = true;
-    }
-    return false;
 }
 
 bool ArmourOnDelay::try_interrupt()
@@ -285,17 +243,6 @@ void stop_delay(bool stop_stair_travel)
 
     auto delay = current_delay();
 
-    // At the very least we can remove any queued delays, right
-    // now there is no problem with doing this... note that
-    // any queuing here can only happen from a single command,
-    // as the effect of a delay doesn't normally allow interaction
-    // until it is done... it merely chains up individual actions
-    // into a single action.  -- bwr
-    // Butcher delays do this on their own, in order to determine the old
-    // list of delays before clearing it.
-    if (!delay->is_butcher())
-        _clear_pending_delays();
-
     if ((!delay->is_stair_travel() || stop_stair_travel)
         && delay->try_interrupt())
     {
@@ -312,36 +259,6 @@ shared_ptr<Delay> current_delay()
 {
     return you_are_delayed() ? you.delay_queue.front()
                              : nullptr;
-}
-
-bool is_being_drained(const item_def &item)
-{
-    if (!you_are_delayed())
-        return false;
-
-    return current_delay()->is_being_used(&item, OPER_EAT);
-}
-
-bool is_being_butchered(const item_def &item, bool just_first)
-{
-    for (const auto delay : you.delay_queue)
-    {
-        if (delay->is_being_used(&item, OPER_BUTCHER))
-            return true;
-
-        if (just_first)
-            break;
-    }
-
-    return false;
-}
-
-bool is_vampire_feeding()
-{
-    if (!you_are_delayed())
-        return false;
-
-    return current_delay()->is_being_used(nullptr, OPER_EAT);
 }
 
 bool player_stair_delay()
@@ -432,24 +349,6 @@ static bool _can_read_scroll(const item_def& scroll)
     return false;
 }
 
-// Xom is amused by a potential food source going to waste, and is
-// more amused the hungrier you are.
-static void _xom_check_corpse_waste()
-{
-    const int food_need = max(HUNGER_SATIATED - you.hunger, 0);
-    xom_is_stimulated(50 + (151 * food_need / 6000));
-}
-
-static bool _auto_eat()
-{
-    return Options.auto_eat_chunks
-           && Options.autopickup_on > 0
-           && (player_likes_chunks(true)
-               || !you.gourmand()
-               || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
-               || you.hunger_state < HS_SATIATED);
-}
-
 void clear_macro_process_key_delay()
 {
     if (dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
@@ -528,16 +427,7 @@ void BaseRunDelay::handle()
     if ((want_move() && you.confused()) || !i_feel_safe(true, want_move()))
         stop_running();
     else
-    {
-        if (want_autoeat() && _auto_eat())
-        {
-            const interrupt_block block_interrupts;
-            if (prompt_eat_chunks(true) == 1)
-                return;
-        }
-
         cmd = move_cmd();
-    }
 
     if (cmd != CMD_NO_CMD)
     {
@@ -577,56 +467,6 @@ void MacroDelay::handle()
     // main.cc will call world_reacts and increase turn count.
     if (!you.turn_is_over && you.time_taken)
         you.time_taken = 0;
-}
-
-bool EatDelay::invalidated()
-{
-    // Stop eating if something happens (chunk rots, you get teleported,
-    // you get polymorphed into a lich, etc.)
-    if (!can_eat(food, true)
-        || !in_inventory(food) && food.pos != you.pos())
-    {
-        mpr("You stop eating.");
-        return true;
-    }
-
-    return false;
-}
-
-static bool _check_corpse_gone(item_def& item, const char* action)
-{
-    // A monster may have raised the corpse you're chopping up! -- bwr
-    // Note that a monster could have raised the corpse and another
-    // monster could die and create a corpse with the same ID number...
-    // However, it would not be at the player's square like the
-    // original and that's why we do it this way.
-    if (!item.defined()
-        || item.base_type != OBJ_CORPSES
-        || item.pos != you.pos())
-    {
-        // There being no item at all could have happened for several
-        // reasons, so don't bother to give a message.
-        return true;
-    }
-    else if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
-    {
-        mprf("The corpse has rotted away into a skeleton before "
-             "you could %s!", action);
-        _xom_check_corpse_waste();
-        return true;
-    }
-
-    return false;
-}
-
-bool ButcherDelay::invalidated()
-{
-    return _check_corpse_gone(corpse, "butcher it");
-}
-
-bool BottleBloodDelay::invalidated()
-{
-    return _check_corpse_gone(corpse, "bottle its blood");
 }
 
 bool MultidropDelay::invalidated()
@@ -791,13 +631,6 @@ void ArmourOffDelay::finish()
     unequip_item(slot);
 }
 
-void EatDelay::finish()
-{
-    if (food_turns(food) > 1) // If duration was just one turn, don't print.
-        mpr("You finish eating.");
-    finish_eating_item(food);
-}
-
 void MemoriseDelay::finish()
 {
     mpr("You finish memorising.");
@@ -867,34 +700,6 @@ void BlurryScrollDelay::finish()
     // Make sure the scroll still exists, the player isn't confused, etc
     if (_can_read_scroll(scroll))
         read_scroll(scroll);
-}
-
-static void _finish_butcher_delay(item_def& corpse, bool bottling)
-{
-    // We know the item is valid and a real corpse, because invalidated()
-    // checked for that.
-    finish_butchering(corpse, bottling);
-    // Don't waste time picking up chunks if you're already
-    // starving. (jpeg)
-    if ((you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
-        // Only pick up chunks if this is the last delay...
-        && (you.delay_queue.size() == 1
-        // ...Or, equivalently, if it's the last butcher one.
-            || !you.delay_queue[1]->is_butcher()))
-    {
-        request_autopickup();
-    }
-    you.turn_is_over = true;
-}
-
-void ButcherDelay::finish()
-{
-    _finish_butcher_delay(corpse, false);
-}
-
-void BottleBloodDelay::finish()
-{
-    _finish_butcher_delay(corpse, true);
 }
 
 void DropItemDelay::finish()
@@ -1044,13 +849,6 @@ static bool _should_stop_activity(Delay* delay,
         }
     }
 
-    // Don't interrupt feeding or butchering for monsters already in view.
-    if (curr->is_butcher() && ai == AI_SEE_MONSTER
-        && testbits(at.mons_data->flags, MF_WAS_IN_VIEW))
-    {
-        return false;
-    }
-
     return ai == AI_FORCE_INTERRUPT
            || Options.activity_interrupts[delay->name()][ai];
 }
@@ -1101,7 +899,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
     }
     if (ai != AI_SEE_MONSTER)
         return false;
-    if (delay && !delay->is_run() && !delay->is_butcher())
+    if (delay && !delay->is_run())
         return false;
     if (at.context != SC_NEWLY_SEEN && !delay)
         return false;
@@ -1318,13 +1116,6 @@ bool interrupt_activity(activity_interrupt_type ai,
     }
 
     const auto delay = current_delay();
-
-    // If we get hungry while traveling, let's try to auto-eat a chunk.
-    if (ai == AI_HUNGRY && delay->want_autoeat() && _auto_eat()
-        && prompt_eat_chunks(true) == 1)
-    {
-        return false;
-    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 

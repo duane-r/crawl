@@ -13,7 +13,7 @@
 
 #include "artefact.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "chardump.h"
 #include "coord.h"
 #include "coordit.h"

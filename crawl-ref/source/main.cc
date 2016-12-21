@@ -40,7 +40,7 @@
 #include "beam.h"
 #include "bloodspatter.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "chardump.h"
 #include "cio.h"
 #include "cloud.h"
@@ -73,7 +73,7 @@
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
-#include "food.h"
+
 #include "fprop.h"
 #include "godabil.h"
 #include "godcompanions.h"
@@ -732,7 +732,6 @@ static void _do_wizard_command(int wiz_command)
     case 'D': wizard_detect_creatures(); break;
     case CONTROL('D'): wizard_edit_durations(); break;
 
-    case 'e': wizard_set_hunger_state(); break;
     // case 'E': break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
@@ -1100,7 +1099,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_PICKUP:
     case CMD_DROP:
     case CMD_DROP_LAST:
-    case CMD_BUTCHER:
     case CMD_GO_UPSTAIRS:
     case CMD_GO_DOWNSTAIRS:
     case CMD_WIELD_WEAPON:
@@ -1870,12 +1868,6 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
-    if (you.hunger_state <= HS_STARVING && !you_min_hunger())
-    {
-        mpr("You're too hungry to rest.");
-        return;
-    }
-
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max || !player_regenerates_hp())
@@ -2114,10 +2106,8 @@ void process_command(command_type cmd)
         break;
 
         // Action commands.
-    case CMD_BUTCHER:              butchery();               break;
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
     case CMD_DISPLAY_SPELLS:       inspect_spells();         break;
-    case CMD_EAT:                  eat_food();               break;
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
@@ -2591,12 +2581,6 @@ static command_type _get_next_cmd()
     check_messages();
 #endif
 
-#ifdef DEBUG_DIAGNOSTICS
-    // Save hunger at start of round for use with hunger "delta-meter"
-    // in output.cc.
-    you.old_hunger = you.hunger;
-#endif
-
 #ifdef DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
@@ -2852,7 +2836,6 @@ static void _swing_at_target(coord_def move)
         }
         else if (!you.fumbles_attack())
             mpr("You swing at nothing.");
-        make_hungry(3, true);
         // Take the usual attack delay.
         you.time_taken = you.attack_delay().roll();
     }
@@ -3269,12 +3252,7 @@ static void _move_player(coord_def move)
 
     if (you.digging)
     {
-        if (you.hunger_state <= HS_STARVING && you.undead_state() == US_ALIVE)
-        {
-            you.digging = false;
-            canned_msg(MSG_TOO_HUNGRY);
-        }
-        else if (grd(targ) == DNGN_ROCK_WALL
+        if (grd(targ) == DNGN_ROCK_WALL
                  || grd(targ) == DNGN_CLEAR_ROCK_WALL
                  || grd(targ) == DNGN_GRATE)
         {
@@ -3415,7 +3393,6 @@ static void _move_player(coord_def move)
                  DESC_THE, false).c_str());
             destroy_wall(targ);
             noisy(6, you.pos());
-            make_hungry(50, true);
             additional_time_taken += BASELINE_DELAY / 5;
         }
 

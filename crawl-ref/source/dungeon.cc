@@ -23,7 +23,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -39,7 +39,7 @@
 #include "english.h"
 #include "files.h"
 #include "flood_find.h"
-#include "food.h"
+
 #include "ghost.h"
 #include "godpassive.h"
 #include "itemname.h"
@@ -274,6 +274,28 @@ static void _count_gold()
             }
         }
     }
+}
+
+/** Skeletonise this corpse.
+ *
+ *  @param item the corpse to be turned into a skeleton.
+ *  @returns whether a valid skeleton could be made.
+ */
+bool turn_corpse_into_skeleton(item_def &item)
+{
+    ASSERT(item.base_type == OBJ_CORPSES);
+    ASSERT(item.sub_type == CORPSE_BODY);
+
+    // Some monsters' corpses lack the structure to leave skeletons
+    // behind.
+    if (!mons_skeleton(item.mon_type))
+        return false;
+
+    item.sub_type = CORPSE_SKELETON;
+    item.freshness = FRESHEST_CORPSE; // reset rotting counter
+    item.rnd = 1 + random2(255); // not sure this is necessary, but...
+    item.props.erase(FORCED_ITEM_COLOUR_KEY);
+    return true;
 }
 
 /**********************************************************************
@@ -4211,8 +4233,6 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(*corpse);
-    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(*corpse, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {

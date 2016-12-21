@@ -31,7 +31,7 @@
 #include "env.h"
 #include "fight.h"
 #include "files.h"
-#include "food.h"
+
 #include "format.h"
 #include "godabil.h"
 #include "godpassive.h"
@@ -2848,9 +2848,7 @@ void start_explore(bool grab_items)
 
 void do_explore_cmd()
 {
-    if (you.hunger_state <= HS_STARVING && !you_min_hunger())
-        mpr("You need to eat something NOW!");
-    else if (you.berserk())
+    if (you.berserk())
         mpr("Calm down first, please.");
     else if (player_in_branch(BRANCH_LABYRINTH))
         mpr("No exploration algorithm can help you here.");

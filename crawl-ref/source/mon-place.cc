@@ -226,6 +226,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         return false;
 }
 
+#if 0
 static bool _is_spawn_scaled_area(const level_id &here)
 {
     return is_connected_branch(here.branch)
@@ -233,6 +234,7 @@ static bool _is_spawn_scaled_area(const level_id &here)
            && here.branch != BRANCH_VESTIBULE
            && here.branch != BRANCH_ZOT;
 }
+#endif
 
 // Scale monster generation parameter with time spent on level. Note:
 // (target_value - base_value) * dropoff_ramp_turns must be < INT_MAX!
@@ -242,7 +244,7 @@ static int _scale_spawn_parameter(int base_value,
                                   int dropoff_start_turns = 3000,
                                   int dropoff_ramp_turns  = 12000)
 {
-	return base_value;
+  return base_value;
 #if 0
     if (!_is_spawn_scaled_area(level_id::current()))
         return base_value;

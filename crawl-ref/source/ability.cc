@@ -18,7 +18,7 @@
 #include "acquire.h"
 #include "areas.h"
 #include "branch.h"
-#include "butcher.h"
+
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -31,7 +31,6 @@
 #include "evoke.h"
 #include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "godabil.h"
 #include "godcompanions.h"
 #include "godconduct.h"
@@ -741,13 +740,6 @@ const string make_cost_description(ability_type ability)
             abil.flags & abflag::PERMANENT_HP ? "Permanent " : "");
     }
 
-    if (abil.food_cost && !you_foodless(true)
-        && (you.undead_state() != US_SEMI_UNDEAD
-            || you.hunger_state > HS_STARVING))
-    {
-        ret += ", Hunger"; // randomised and exact amount hidden from player
-    }
-
     if (abil.piety_cost || abil.flags & abflag::PIETY)
         ret += ", Piety"; // randomised and exact amount hidden from player
 
@@ -838,15 +830,6 @@ static const string _detailed_cost_description(ability_type ability)
         else
             ret << "\nHP     : ";
         ret << abil.hp_cost.cost(you.hp_max);
-    }
-
-    if (abil.food_cost && !you_foodless(true)
-        && (you.undead_state() != US_SEMI_UNDEAD
-            || you.hunger_state > HS_STARVING))
-    {
-        have_cost = true;
-        ret << "\nHunger : ";
-        ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 
     if (abil.piety_cost || abil.flags & abflag::PIETY)
@@ -1135,7 +1118,6 @@ void no_ability_msg()
             mpr("You can't untransform!");
         else
         {
-            ASSERT(you.hunger_state > HS_SATIATED);
             mpr("Sorry, you're too full to transform right now.");
         }
     }
@@ -1240,7 +1222,7 @@ bool activate_ability()
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
 static bool _check_ability_possible(const ability_def& abil,
-                                    bool hungerCheck = true,
+                                    bool hungerCheck = false,
                                     bool quiet = false)
 {
     if (you.berserk())
@@ -1267,27 +1249,6 @@ static bool _check_ability_possible(const ability_def& abil,
                 mprf("You cannot call out to %s while silenced.",
                      god_name(you.religion).c_str());
             }
-            return false;
-        }
-    }
-    // Don't insta-starve the player.
-    // (Losing consciousness possible from 400 downward.)
-    if (hungerCheck && !you.undead_state())
-    {
-        const hunger_state_t state =
-            static_cast<hunger_state_t>(max(0, you.hunger_state - 1));
-        const int expected_hunger = hunger_threshold[state]
-                                    - abil.food_cost * 2;
-        if (!quiet)
-        {
-            dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
-                 you.hunger, abil.food_cost * 2, expected_hunger);
-        }
-        // Safety margin for natural hunger, mutations etc.
-        if (expected_hunger <= 50)
-        {
-            if (!quiet)
-                canned_msg(MSG_TOO_HUNGRY);
             return false;
         }
     }
@@ -1613,38 +1574,7 @@ bool activate_talent(const talent& tal)
     }
 
     // Some abilities don't need a hunger check.
-    bool hungerCheck = true;
-    switch (tal.which)
-    {
-        case ABIL_RENOUNCE_RELIGION:
-        case ABIL_CONVERT_TO_BEOGH:
-        case ABIL_STOP_FLYING:
-        case ABIL_EVOKE_TURN_VISIBLE:
-        case ABIL_END_TRANSFORMATION:
-        case ABIL_DELAYED_FIREBALL:
-        case ABIL_STOP_SINGING:
-        case ABIL_STOP_RECALL:
-        case ABIL_TRAN_BAT:
-        case ABIL_ASHENZARI_END_TRANSFER:
-        case ABIL_HEPLIAKLQANA_IDENTITY:
-        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
-        case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
-        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
-        case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
-            hungerCheck = false;
-            break;
-        default:
-            break;
-    }
-
-    if (hungerCheck && !you.undead_state() && !you_foodless()
-        && you.hunger_state <= HS_STARVING)
-    {
-        canned_msg(MSG_TOO_HUNGRY);
-        crawl_state.zero_turns_taken();
-        return false;
-    }
+    bool hungerCheck = false;
 
     const ability_def& abil = get_ability_def(tal.which);
 
@@ -3124,13 +3054,12 @@ static void _pay_ability_costs(const ability_def& abil)
     else
         you.turn_is_over = true;
 
-    const int food_cost  = abil.food_cost + random2avg(abil.food_cost, 2);
     const int piety_cost =
         _scale_piety_cost(abil.ability, abil.piety_cost.cost());
     const int hp_cost    = abil.hp_cost.cost(you.hp_max);
 
-    dprf("Cost: mp=%d; hp=%d; food=%d; piety=%d",
-         abil.mp_cost, hp_cost, food_cost, piety_cost);
+    dprf("Cost: mp=%d; hp=%d; piety=%d",
+         abil.mp_cost, hp_cost, piety_cost);
 
     if (abil.mp_cost)
     {
@@ -3145,9 +3074,6 @@ static void _pay_ability_costs(const ability_def& abil)
         if (abil.flags & abflag::PERMANENT_HP)
             rot_hp(hp_cost);
     }
-
-    if (food_cost)
-        make_hungry(food_cost, false, true);
 
     if (piety_cost)
         lose_piety(piety_cost);
@@ -3349,7 +3275,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
-        && you.hunger_state <= HS_SATIATED
         && you.form != TRAN_BAT)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
