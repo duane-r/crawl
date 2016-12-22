@@ -1279,6 +1279,18 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.flags |= ISFLAG_NO_PICKUP;
 }
 
+static void _generate_food_item(item_def& item, int force_quant, int force_type)
+{
+    // Determine sub_type:
+    item.sub_type = FOOD_FRUIT;
+
+    // Determine quantity.
+    if (force_quant > 1)
+        item.quantity = force_quant;
+    else
+        item.quantity = 1;
+}
+
 static void _generate_potion_item(item_def& item, int force_type,
                                   int item_level, int agent)
 {
@@ -1795,7 +1807,7 @@ int items(bool allow_uniques,
                                     30, OBJ_BOOKS,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,
-                                   140, OBJ_FOOD,
+                                    20, OBJ_FOOD,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
@@ -1891,7 +1903,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_FOOD:
-        //_generate_food_item(item, allow_uniques, force_type);
+        _generate_food_item(item, allow_uniques, force_type);
         break;
 
     case OBJ_POTIONS:

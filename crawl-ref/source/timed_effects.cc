@@ -952,8 +952,9 @@ static struct timed_effect timed_effects[] =
 #endif
     { handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
-    { nullptr,                                0,     0, false },
+    { nullptr,                         0,     0, false },
 #endif
+    { nullptr,                         0,     0, false },
     { _wait_practice,                100,   300, false },
     { _lab_change,                  1000,  3000, false },
     { _abyss_speed,                  100,   300, false },
