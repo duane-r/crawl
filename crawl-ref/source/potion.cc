@@ -210,54 +210,6 @@ public:
     }
 };
 
-/**
- * Return a message for the player drinking blood when a non-vampire.
- */
-static string _blood_flavour_message()
-{
-    if (player_mutation_level(MUT_HERBIVOROUS) < 3 && player_likes_chunks())
-        return "This tastes like blood.";
-    return "Yuck - this tastes like blood.";
-}
-
-class PotionBlood : public PotionEffect
-{
-private:
-    PotionBlood() : PotionEffect(POT_BLOOD) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionBlood);
-public:
-    static const PotionBlood &instance()
-    {
-        static PotionBlood inst; return inst;
-    }
-
-    bool effect(bool=true, int pow = 40, bool=true) const override
-    {
-        if (you.species == SP_VAMPIRE)
-        {
-            mpr("Yummy - fresh blood!");
-        }
-        else
-            mpr(_blood_flavour_message());
-            // no actual effect, just 'flavour' ha ha ha
-        return true;
-    }
-
-    bool can_quaff(string *reason = nullptr) const override
-    {
-        return true;
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (was_known && !check_known_quaff())
-            return false;
-
-        effect(was_known, 1000);
-        return true;
-    }
-};
-
 
 class PotionHaste : public PotionEffect
 {
@@ -956,44 +908,6 @@ public:
     }
 };
 
-class PotionBloodCoagulated : public PotionEffect
-{
-private:
-    PotionBloodCoagulated() : PotionEffect(POT_BLOOD_COAGULATED) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionBloodCoagulated);
-public:
-    static const PotionBloodCoagulated &instance()
-    {
-        static PotionBloodCoagulated inst; return inst;
-    }
-
-    bool effect(bool=true, int pow = 40, bool=true) const override
-    {
-        if (you.species == SP_VAMPIRE)
-        {
-            mpr("This tastes delicious.");
-        }
-        else
-            mpr(_blood_flavour_message());
-            // no actual effect, just 'flavour' ha ha ha
-        return true;
-    }
-
-    bool can_quaff(string *reason = nullptr) const override
-    {
-        return true;
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (was_known && !check_known_quaff())
-            return false;
-
-        effect(was_known, 840);
-        return true;
-    }
-};
-
 class PotionGainStrength : public PotionEffect
 {
 private:
@@ -1074,37 +988,6 @@ public:
 
         if (effect())
             learned_something_new(HINT_YOU_MUTATED);
-        return true;
-    }
-};
-
-class PotionPorridge : public PotionEffect
-{
-private:
-    PotionPorridge() : PotionEffect(POT_PORRIDGE) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionPorridge);
-public:
-    static const PotionPorridge &instance()
-    {
-        static PotionPorridge inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        if (you.species == SP_VAMPIRE
-            || player_mutation_level(MUT_CARNIVOROUS) == 3)
-        {
-            mpr("Blech - that potion was really gluggy!");
-        }
-        else
-        {
-            mpr("That potion was really gluggy!");
-        }
-        return true;
-    }
-
-    bool can_quaff(string *reason) const override
-    {
         return true;
     }
 };
@@ -1251,9 +1134,6 @@ static const PotionEffect* potion_effects[] =
     &PotionCancellation::instance(),
     &PotionAmbrosia::instance(),
     &PotionInvisibility::instance(),
-#if TAG_MAJOR_VERSION == 34
-    &PotionPorridge::instance(),
-#endif
     &PotionDegeneration::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionDecay::instance(),
@@ -1269,10 +1149,6 @@ static const PotionEffect* potion_effects[] =
     &PotionCureMutation::instance(),
     &PotionMutation::instance(),
     &PotionResistance::instance(),
-    &PotionBlood::instance(),
-#if TAG_MAJOR_VERSION == 34
-    &PotionBloodCoagulated::instance(),
-#endif
     &PotionLignify::instance(),
     &PotionBeneficialMutation::instance(),
     &PotionStale::instance()

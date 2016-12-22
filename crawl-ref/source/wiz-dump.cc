@@ -71,8 +71,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return AMU_RAGE;
     if (s == "Harm")
         return AMU_HARM;
-    if (s == "Gourm")
-        return AMU_THE_GOURMAND;
     if (s == "Inacc")
         return AMU_INACCURACY;
     if (s == "Spirit")
@@ -543,10 +541,6 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 8;
     else if (tokens[0] == "rMut")
         offset = 7;
-    else if (tokens[0] == "Saprov") // older dump files
-        offset = 9;
-    else if (tokens[0] == "Gourm") // older dump files
-        offset = 5;
     else if (tokens[0] == "MR")
         offset = 5;
     else if (tokens[0] == "Stlth")

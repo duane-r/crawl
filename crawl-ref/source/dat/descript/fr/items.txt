@@ -44,13 +44,6 @@ Bien que l'amulette soit efficace contre la plupart des magies translocatives,
 les changements de plan tels que le bannissement sont au delà des ses capacités
 bloquantes.
 %%%%
-amulet of the gourmand
-
-Cette amulette permet à son porteur de digérer la viande fraîche crue même s'il
-n'a pas faim et en augmente significativement l'apport nutritionnel. Ces effets
-sur la digestion du porteur s'accumulent avec le temps et sont initialement
-faibles.
-%%%%
 amulet of warding
 
 Cette amulette repousse une partie des attaques des créatures qui ont été
@@ -660,12 +653,6 @@ bénéfiques (ou supposés comme tels).
 potion of berserk rage
 
 Une potion qui déclenche une rage incontrôlable.
-%%%%
-potion of blood
-
-Une potion contenant l'essence de la vie. Ce fluide est vital pour toutes les
-créatures vivantes, ainsi que quelques morts-vivants. Il peut également nourrir
-ceux qui sont capables de manger de la viande.
 %%%%
 potion of brilliance
 

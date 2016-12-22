@@ -719,8 +719,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
     { OBJ_POTIONS,   POT_WATER },
     { OBJ_POTIONS,   POT_STRONG_POISON },
-    { OBJ_POTIONS,   POT_BLOOD_COAGULATED },
-    { OBJ_POTIONS,   POT_PORRIDGE },
     { OBJ_POTIONS,   POT_SLOWING },
     { OBJ_POTIONS,   POT_DECAY },
     { OBJ_POTIONS,   POT_POISON },
@@ -2233,85 +2231,6 @@ bool ring_has_stackable_effect(const item_def &item)
     }
 
     return false;
-}
-
-//
-// Food functions:
-//
-#if TAG_MAJOR_VERSION == 34
-bool is_real_food(food_type food)
-{
-    return food < NUM_FOODS && Food_index[food] < Food_index[FOOD_UNUSED];
-}
-
-#endif
-bool is_blood_potion(const item_def &item)
-{
-    if (item.base_type != OBJ_POTIONS)
-        return false;
-
-    return item.sub_type == POT_BLOOD
-#if TAG_MAJOR_VERSION == 34
-           || item.sub_type == POT_BLOOD_COAGULATED
-#endif
-            ;
-}
-
-bool food_is_meaty(int food_type)
-{
-    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
-            "Bad food type %d (NUM_FOODS = %d)",
-            food_type, NUM_FOODS);
-
-    return Food_prop[Food_index[food_type]].carn_mod > 0;
-}
-
-bool food_is_meaty(const item_def &item)
-{
-    if (item.base_type != OBJ_FOOD)
-        return false;
-
-    return food_is_meaty(item.sub_type);
-}
-
-bool food_is_veggie(int food_type)
-{
-    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
-            "Bad food type %d (NUM_FOODS = %d)",
-            food_type, NUM_FOODS);
-
-    return Food_prop[Food_index[food_type]].herb_mod > 0;
-}
-
-bool food_is_veggie(const item_def &item)
-{
-    if (item.base_type != OBJ_FOOD)
-        return false;
-
-    return food_is_veggie(item.sub_type);
-}
-
-int food_value(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-
-    const int herb = player_mutation_level(MUT_HERBIVOROUS);
-    const int carn = player_mutation_level(MUT_CARNIVOROUS);
-
-    const food_def &food = Food_prop[Food_index[item.sub_type]];
-
-    int ret = food.value;
-
-    ret += carn * food.carn_mod;
-    ret += herb * food.herb_mod;
-
-    return ret;
-}
-
-int food_turns(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return Food_prop[Food_index[item.sub_type]].turns;
 }
 
 bool is_fruit(const item_def & item)

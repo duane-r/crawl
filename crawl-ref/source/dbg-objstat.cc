@@ -658,16 +658,6 @@ void objstat_record_item(const item_def &item)
         brand = get_ammo_brand(item);
         break;
     case ITEM_FOOD:
-        _record_item_stat(cur_lev, itype, "TotalNormNutr", food_value(item));
-        // Set these dietary mutations so we can get accurate nutrition.
-        you.mutation[MUT_CARNIVOROUS] = 3;
-        _record_item_stat(cur_lev, itype, "TotalCarnNutr",
-                             food_value(item) * food_is_meaty(item.sub_type));
-        you.mutation[MUT_CARNIVOROUS] = 0;
-        you.mutation[MUT_HERBIVOROUS] = 3;
-        _record_item_stat(cur_lev, itype, "TotalHerbNutr",
-                             food_value(item) * food_is_veggie(item.sub_type));
-        you.mutation[MUT_HERBIVOROUS] = 0;
         break;
     case ITEM_WEAPONS:
         brand = get_weapon_brand(item);

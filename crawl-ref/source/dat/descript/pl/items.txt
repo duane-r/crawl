@@ -414,13 +414,6 @@ potion of berserk rage
 
 Eliksir który pozwala wprowadzić się w bitewny szał.
 %%%%
-potion of blood
-
-Jest to zwykła krew, taka jak płynie w żyłach większości stworzeń. Może
-stanowić posiłek dla kogokolwiek zdolnego do trawienia mięsa, jakkolwiek
-cywilizowane osoby uznają to za odrażające. Bardziej potworne istoty nie mają
-takich oporów. Zaś wampiry i komary... wiadomo.
-%%%%
 potion of brilliance
 
 Eliksir który wielce zwiększa inteligencję i magiczne zdolności pijącego, na

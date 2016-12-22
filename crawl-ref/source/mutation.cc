@@ -121,7 +121,6 @@ static const body_facet_def _body_facets[] =
  */
 static const int conflict[][3] =
 {
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      0},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
     { MUT_FAST,                MUT_SLOW,                   0},
@@ -135,8 +134,6 @@ static const int conflict[][3] =
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
-    { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
-    { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_BERSERK,             MUT_CLARITY,                1},
@@ -551,13 +548,9 @@ static void _display_vampire_attributes()
     {
         {"                     ", "<green>Full</green>       ", "Satiated   ", "<yellow>Thirsty</yellow>    ", "<lightred>Bloodless</lightred>"},
                                  //Full       Satiated      Thirsty         Bloodless
-        {"Metabolism           ", "fast       ", "normal     ", "slow       ", "none  "},
-
         {"Regeneration         ", "fast       ", "normal     ", "slow       ", "none  "},
 
         {"Stealth boost        ", "none       ", "none       ", "minor      ", "major "},
-
-        {"Hunger costs         ", "full       ", "full       ", "halved     ", "none  "},
 
         {"\n<w>Resistances</w>\n"
          "Poison resistance    ", "           ", "           ", "+          ", "immune"},
@@ -1054,15 +1047,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Vampires' healing and thirst rates depend on their blood level.
-    if (you.species == SP_VAMPIRE
-        && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_REGENERATION
-            || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
-    {
-        return true;
-    }
-
     // Felids have innate claws, and unlike trolls/ghouls, there are no
     // increases for them. And octopodes have no hands.
     if ((you.species == SP_FELID || you.species == SP_OCTOPODE)
@@ -1096,9 +1080,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Heat doesn't hurt fire, djinn don't care about hunger.
     if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
         || mutat == MUT_HEAT_VULNERABILITY
-        || mutat == MUT_BERSERK
-        || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
-        || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
+        || mutat == MUT_BERSERK))
     {
         return true;
     }

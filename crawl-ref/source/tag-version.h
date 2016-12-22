@@ -101,7 +101,6 @@ enum tag_minor_version
     TAG_MINOR_DIET_MUT,            // Remove carnivore/herbivore muts from random generation.
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
     TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load
-    TAG_MINOR_SAPROVOROUS,         // Remove Saprovorous from several species
     TAG_MINOR_CE_HA_DIET,          // Remove intrinsic diet muts from Ce & Ha
     TAG_MINOR_NO_POT_FOOD,         // Remove Royal Jellies & Ambrosia
     TAG_MINOR_ROT_IMMUNITY,        // Make rot immunity an intrinsic mutation.

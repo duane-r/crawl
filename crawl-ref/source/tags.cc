@@ -2804,38 +2804,6 @@ static void tag_read_you(reader &th)
         }
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)
-    {
-        you.mutation[MUT_CARNIVOROUS] = you.innate_mutation[MUT_CARNIVOROUS];
-        you.mutation[MUT_HERBIVOROUS] = you.innate_mutation[MUT_HERBIVOROUS];
-
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS
-        && you.species == SP_OGRE)
-    {
-        // Remove the innate level of fast metabolism
-        you.mutation[MUT_FAST_METABOLISM] -= 1;
-        you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_CE_HA_DIET)
-    {
-        if (you.species == SP_CENTAUR)
-        {
-            you.mutation[MUT_FAST_METABOLISM] -= 1;
-            you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
-
-            you.mutation[MUT_HERBIVOROUS] -= 1;
-            you.innate_mutation[MUT_HERBIVOROUS] -= 1;
-        }
-        else if (you.species == SP_HALFLING)
-        {
-            you.mutation[MUT_SLOW_METABOLISM] -= 1;
-            you.innate_mutation[MUT_SLOW_METABOLISM] -= 1;
-        }
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY)
     {
         if (you.species == SP_VINE_STALKER)
@@ -2853,15 +2821,11 @@ static void tag_read_you(reader &th)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_FOUL_STENCH
-        && you.species == SP_DEMONSPAWN
-        && you.innate_mutation[MUT_SAPROVOROUS])
+        && you.species == SP_DEMONSPAWN)
     {
         you.mutation[MUT_ROT_IMMUNITY] =
         you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
     }
-
-    you.mutation[MUT_SAPROVOROUS] =
-    you.innate_mutation[MUT_SAPROVOROUS] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
         && you.species == SP_DEMONSPAWN)
@@ -2882,15 +2846,6 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_FLAME_CLOUD_IMMUNITY] =
             you.innate_mutation[MUT_FLAME_CLOUD_IMMUNITY] = 1;
         }
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_METABOLISM)
-    {
-        you.mutation[MUT_FAST_METABOLISM] =
-        you.innate_mutation[MUT_FAST_METABOLISM];
-
-        you.mutation[MUT_SLOW_METABOLISM] =
-        you.innate_mutation[MUT_SLOW_METABOLISM];
     }
 
     if (th.getMinorVersion() < TAG_MINOR_NO_JUMP
@@ -2938,15 +2893,6 @@ static void tag_read_you(reader &th)
     {
         if (you.mutation[MUT_MP_WANDS] > 1)
             you.mutation[MUT_MP_WANDS] = 1;
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_NAGA_METABOLISM)
-    {
-        if (you.species == SP_NAGA)
-        {
-            you.mutation[MUT_SLOW_METABOLISM] =
-                you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
-        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
@@ -4355,7 +4301,6 @@ void unmarshallItem(reader &th, item_def &item)
         // Remove fast metabolism property
         if (artefact_property(item, ARTP_METABOLISM))
         {
-            artefact_set_property(item, ARTP_METABOLISM, 0);
             artefact_set_property(item, ARTP_STEALTH, -1);
         }
 

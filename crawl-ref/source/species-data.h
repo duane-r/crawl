@@ -316,9 +316,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LITTLE,
     4, 9, 11, // 24
     { STAT_INT, STAT_DEX }, 5,
-    { { MUT_CARNIVOROUS, 3, 1 }, { MUT_FAST, 1, 1 }, { MUT_FANGS, 3, 1 },
+    { { MUT_FAST, 1, 1 }, { MUT_FANGS, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ACUTE_VISION, 1, 1 }, { MUT_PAWS, 1, 1 },
-      { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 },
+      { MUT_CLAWS, 1, 1 },
       { MUT_SHAGGY_FUR, 1, 6 }, { MUT_SHAGGY_FUR, 1, 12 }, },
     { "You cannot wear armour.",
       "You are incapable of wielding weapons or throwing items.",
@@ -358,7 +358,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
     11, 3, 4, // 18
     { STAT_STR }, 5,
-    { { MUT_CARNIVOROUS, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
       { MUT_TORMENT_RESISTANCE, 1, 1 },
       { MUT_SLOW_REGENERATION, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
       { MUT_CLAWS, 1, 1 }, { MUT_UNBREATHING, 1, 1 }, },
@@ -450,7 +450,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_SMALL,
     5, 9, 10, // 24
     { STAT_STR, STAT_DEX }, 5,
-    { { MUT_CARNIVOROUS, 3, 1 }, },
+    {},
     {},
     {},
     { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_ENCHANTER,
@@ -528,7 +528,7 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
       { MUT_SPIT_POISON, 1, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
-      { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CONSTRICTING_TAIL, 1, 13 } },
+      { MUT_CONSTRICTING_TAIL, 1, 13 } },
     { "You cannot wear boots." },
     {},
     { JOB_BERSERKER, JOB_TRANSMUTER, JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST,
@@ -583,8 +583,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LITTLE,
     4, 9, 11, // 24
     { STAT_INT, STAT_DEX }, 5,
-    { { MUT_FAST, 3, 1 }, { MUT_HERBIVOROUS, 3, 1 },
-      { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW_METABOLISM, 2, 1 }, },
+    { { MUT_FAST, 3, 1 },
+      { MUT_ACUTE_VISION, 1, 1 }, },
     {},
     {},
     { JOB_ASSASSIN, JOB_ARTIFICER, JOB_ABYSSAL_KNIGHT, JOB_WARPER,
@@ -621,7 +621,6 @@ static const map<species_type, species_def> species_data =
     15, 4, 5, // 24
     { STAT_STR }, 3,
     { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 1, 1 }, { MUT_CLAWS, 3, 1 },
-      { MUT_GOURMAND, 1, 1 }, { MUT_FAST_METABOLISM, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, },
     {},
     {},

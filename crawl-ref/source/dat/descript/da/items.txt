@@ -501,11 +501,6 @@ potion of berserk rage
 
 En trylledrik, som bevirker et usammenhængende raserianfald.
 %%%%
-potion of blood
-
-En flaske, som indeholder livets essens. Den er livsvigtig for alle levende
-væsener og for visse udøde. Den giver også næring til dem, der kan fordøje kød.
-%%%%
 potion of brilliance
 
 En trylledrik, som kan øge både intelligens og magisk kraft voldsomt hos den,

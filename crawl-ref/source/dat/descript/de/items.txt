@@ -461,12 +461,6 @@ potion of berserk rage
 
 Ein Trank, der einen in eine zusammenhanglose Wut senden kann
 %%%%
-potion of blood
-
-Ein Trank, der die Essenz des Lebens enthält. Es ist für sowohl alle
-Lebensunterhaltskreaturen als auch einige Untoten wichtig. Es kann auch
-Ernährung für jene liefern, die zu Essfleisch fähig sind.
-%%%%
 potion of brilliance
 
 Ein zauberhafter Trank, der das Geschick und Ausweichen von eins sehr steigert,

@@ -654,7 +654,6 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
     case POT_STRONG_POISON:     return "strong poison";
-    case POT_PORRIDGE:          return "porridge";
     case POT_SLOWING:           return "slowing";
 #endif
     case POT_FLIGHT:            return "flight";
@@ -676,10 +675,6 @@ const char* potion_type_name(int potiontype)
     case POT_BERSERK_RAGE:      return "berserk rage";
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
-    case POT_BLOOD:             return "blood";
-#if TAG_MAJOR_VERSION == 34
-    case POT_BLOOD_COAGULATED:  return "coagulated blood";
-#endif
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
@@ -767,7 +762,6 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_RAGE:              return "rage";
         case AMU_HARM:              return "harm";
         case AMU_MANA_REGENERATION: return "magic regeneration";
-        case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
         case AMU_DISMISSAL:         return "obsoleteness";
         case AMU_CONSERVATION:      return "conservation";
@@ -822,7 +816,6 @@ static const char* _jewellery_effect_prefix(int jeweltype)
 {
     switch (static_cast<jewellery_type>(jeweltype))
     {
-    case AMU_THE_GOURMAND: return "the ";
     default:               return "";
     }
 }
@@ -2588,13 +2581,7 @@ void check_item_knowledge(bool unknown_items)
         }
         // Foods
         for (int i = 0; i < NUM_FOODS; i++)
-        {
-#if TAG_MAJOR_VERSION == 34
-            if (!is_real_food(static_cast<food_type>(i)))
-                continue;
-#endif
             _add_fake_item(OBJ_FOOD, i, selected_items, items_food);
-        }
 
         // Misc.
         static const pair<object_class_type, int> misc_list[] =
@@ -3556,14 +3543,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.permanent_flight();
 
 #if TAG_MAJOR_VERSION == 34
-        case POT_PORRIDGE:
-            return you.species == SP_VAMPIRE
-                    || player_mutation_level(MUT_CARNIVOROUS) == 3;
-        case POT_BLOOD_COAGULATED:
-#endif
-        case POT_BLOOD:
-            return you.species != SP_VAMPIRE;
-#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
         case POT_STRONG_POISON:
@@ -3601,12 +3580,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_RESIST_CORROSION:
             return you.res_corr(false, false);
-
-        case AMU_THE_GOURMAND:
-            return player_likes_chunks(true) == 3
-                   || player_mutation_level(MUT_GOURMAND) > 0
-                   || player_mutation_level(MUT_HERBIVOROUS) == 3
-                   || you.undead_state(temp);
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion)
@@ -3800,15 +3773,6 @@ string item_prefix(const item_def &item, bool temp)
 
     switch (item.base_type)
     {
-    case OBJ_POTIONS:
-        if (is_good_god(you.religion) && item_type_known(item)
-            && is_blood_potion(item))
-        {
-            prefixes.push_back("evil_eating");
-            prefixes.push_back("forbidden");
-        }
-        break;
-
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         if (is_range_weapon(item))

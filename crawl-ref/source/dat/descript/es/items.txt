@@ -383,12 +383,6 @@ potion of berserk rage
 
 Una poción que permite entrar en un estado de trance berserk.
 %%%%
-potion of blood
-
-Una poción que contiene la esencia de la vida. Es vital para todos los seres
-vivos, al igual que para algunos no-muertos. Puede proporcionar nutrición para
-los que puedan alimentarse de carne.
-%%%%
 potion of brilliance
 
 Una poción mágica que aumenta en gran cantidad la inteligencia y el mana de

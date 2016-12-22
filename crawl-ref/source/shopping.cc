@@ -503,20 +503,12 @@ unsigned int item_value(item_def item, bool ident)
 #if TAG_MAJOR_VERSION == 34
             case POT_POISON:
             case POT_STRONG_POISON:
-            case POT_PORRIDGE:
             case POT_SLOWING:
             case POT_DECAY:
 #endif
-            case POT_BLOOD:
             case POT_DEGENERATION:
                 valued += 10;
                 break;
-
-#if TAG_MAJOR_VERSION == 34
-            case POT_BLOOD_COAGULATED:
-                valued += 5;
-                break;
-#endif
             }
         }
         break;
@@ -652,7 +644,6 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_WIZARDRY:
                 case AMU_REGENERATION:
                 case AMU_GUARDIAN_SPIRIT:
-                case AMU_THE_GOURMAND:
                 case AMU_HARM:
                 case AMU_MANA_REGENERATION:
                     valued += 300;
@@ -824,10 +815,7 @@ bool is_worthless_consumable(const item_def &item)
     case OBJ_POTIONS:
         switch (item.sub_type)
         {
-        // Blood potions are worthless because they are easy to make.
-        case POT_BLOOD:
 #if TAG_MAJOR_VERSION == 34
-        case POT_BLOOD_COAGULATED:
         case POT_SLOWING:
         case POT_DECAY:
         case POT_POISON:
