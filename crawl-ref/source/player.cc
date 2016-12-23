@@ -1177,6 +1177,10 @@ int player_regen()
     if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
+    if (player_mutation_level(MUT_SKELETON_REGEN) &&
+        count_corpses(you) == 0)
+        rr = 0;
+
     return rr;
 }
 
@@ -3722,6 +3726,12 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
         you.hp -= hp_loss;
 
     you.redraw_hit_points = true;
+
+    if (player_mutation_level(MUT_SKELETON_REGEN) &&
+        count_corpses(you) == 0 &&
+        one_chance_in(SKELETON_HASTE_CHANCE))
+        haste_player(random2(SKELETON_MAX_HASTE));
+
 }
 
 void calc_mp()
@@ -4118,6 +4128,10 @@ int get_real_mp(bool include_items)
 
 bool player_regenerates_hp()
 {
+    if (player_mutation_level(MUT_SKELETON_REGEN) &&
+        count_corpses(you) == 0)
+        return false;
+  
     if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
         return false;
     if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)

@@ -721,6 +721,26 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
 } },
 
+{ SP_SKELETON, {
+    "Sk",
+    "Skeleton", nullptr, nullptr,
+    SPF_NONE,
+    -1, 0, 0, 5,
+    MONS_SKELETON,
+    HT_LAND, US_UNDEAD, SIZE_MEDIUM,
+    8, 6, 6, // 25
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
+      { MUT_TORMENT_RESISTANCE, 1, 1 }, { MUT_SLOW, 2, 1 },
+      { MUT_UNBREATHING, 1, 1 }, { MUT_SKELETON_REGEN, 1, 1 },  },
+    { "You do not eat or drink." },
+    { "no food or potions" },
+    { JOB_WIZARD, JOB_CONJURER, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
+      JOB_FIRE_ELEMENTALIST, JOB_SUMMONER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_HIGH_ELF, {
     "HE",
     "High Elf", "Elven", "Elf",

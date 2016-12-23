@@ -3442,3 +3442,25 @@ int count_summons(const actor *summoner, spell_type spell)
 
     return count;
 }
+
+bool summon_flying_skull(int pow)
+{
+    mgen_data mg(MONS_FLYING_SKULL_BABY, BEH_FRIENDLY,
+                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE);
+    mg.hd = you.experience_level;
+    //mg.attack[0].damage = 4 + you.experience_level;
+    mprf("The skull has %d hit dice.", mg.hd);
+    mg.set_summoned(&you, min(2 + (random2(pow) / 4), 6),
+                    SPELL_NO_SPELL, GOD_NO_GOD);
+
+    monster *summon = create_monster(mg);
+
+    if (!summon)
+        return false;
+
+    summon->gain_exp(1000000, you.experience_level);
+    mprf("The skull has %d hit dice.", summon->get_hit_dice());
+    mprf("The skull has %d experience level.", summon->get_experience_level());
+
+    return true;
+}

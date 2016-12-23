@@ -315,6 +315,8 @@ static const ability_def Ability_List[] =
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
 
+    { ABIL_SUMMON_SKULL, "Throw Your Head", 0, 0, 0, 0, {}, abflag::NONE },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -1801,6 +1803,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         else
             return SPRET_ABORT;
+        break;
+
+    case ABIL_SUMMON_SKULL:
+        fail_check();
+        summon_flying_skull(100);
         break;
 
     case ABIL_DELAYED_FIREBALL:
@@ -3352,6 +3359,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
+
+    if (you.species == SP_SKELETON)
+        _add_talent(talents, ABIL_SUMMON_SKULL, check_confused);
 
     if (player_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
         || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
