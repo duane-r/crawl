@@ -3728,7 +3728,8 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     you.redraw_hit_points = true;
 
     if (you.species == SP_SKELETON &&
-        one_chance_in(SKELETON_HASTE_CHANCE))
+        //one_chance_in(SKELETON_HASTE_CHANCE))
+        one_chance_in(10))
     {
         haste_player(random2(SKELETON_MAX_HASTE));
     }
