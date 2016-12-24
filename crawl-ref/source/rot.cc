@@ -86,6 +86,10 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
     ASSERT(it.base_type == OBJ_CORPSES);
     ASSERT(!it.props.exists(CORPSE_NEVER_DECAYS));
 
+    it.freshness -= rot_time;
+    if (it.freshness > 0)
+        return;
+
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
     {
         item_was_destroyed(it);
