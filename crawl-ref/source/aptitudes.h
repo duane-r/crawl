@@ -1495,7 +1495,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_EPOCRASIAN,      SK_THROWING,       -2),
     APT(SP_EPOCRASIAN,      SK_ARMOUR,         -3),
     APT(SP_EPOCRASIAN,      SK_DODGING,         1),
-    APT(SP_EPOCRASIAN,      SK_STEALTH,         3),
+    APT(SP_EPOCRASIAN,      SK_STEALTH,         2),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_EPOCRASIAN,      SK_STABBING,      UNUSABLE_SKILL),
 #endif
@@ -1503,19 +1503,19 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 #if TAG_MAJOR_VERSION == 34
     APT(SP_EPOCRASIAN,      SK_TRAPS,         UNUSABLE_SKILL),
 #endif
-    APT(SP_EPOCRASIAN,      SK_UNARMED_COMBAT, -2),
+    APT(SP_EPOCRASIAN,      SK_UNARMED_COMBAT, -1),
     APT(SP_EPOCRASIAN,      SK_SPELLCASTING,    1),
     APT(SP_EPOCRASIAN,      SK_CONJURATIONS,   -2),
     APT(SP_EPOCRASIAN,      SK_HEXES,           1),
-    APT(SP_EPOCRASIAN,      SK_CHARMS,         -2),
+    APT(SP_EPOCRASIAN,      SK_CHARMS,          0),
     APT(SP_EPOCRASIAN,      SK_SUMMONINGS,     -2),
-    APT(SP_EPOCRASIAN,      SK_NECROMANCY,     -1),
+    APT(SP_EPOCRASIAN,      SK_NECROMANCY,      0),
     APT(SP_EPOCRASIAN,      SK_TRANSLOCATIONS,  1),
     APT(SP_EPOCRASIAN,      SK_TRANSMUTATIONS, -2),
     APT(SP_EPOCRASIAN,      SK_FIRE_MAGIC,     -2),
     APT(SP_EPOCRASIAN,      SK_ICE_MAGIC,      -2),
-    APT(SP_EPOCRASIAN,      SK_AIR_MAGIC,      -2),
-    APT(SP_EPOCRASIAN,      SK_EARTH_MAGIC,    -1),
+    APT(SP_EPOCRASIAN,      SK_AIR_MAGIC,      -1),
+    APT(SP_EPOCRASIAN,      SK_EARTH_MAGIC,    -2),
     APT(SP_EPOCRASIAN,      SK_POISON_MAGIC,   -2),
     APT(SP_EPOCRASIAN,      SK_INVOCATIONS,     4),
     APT(SP_EPOCRASIAN,      SK_EVOCATIONS,      1),
