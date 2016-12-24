@@ -1893,4 +1893,18 @@ static const mutation_def mut_data[] =
   {"You feel sensitive to extremes of temperature.", "", ""},
   {"You no longer feel sensitive to extremes of temperature", "", ""},
 },
+
+{ MUT_THEOSOPHIST, 0, 3, mutflag::GOOD, false,
+  "increased piety gain",
+
+  {"You gain piety rapidly.",
+   "You gain piety rapidly.",
+   "You gain piety rapidly."},
+  {"You feel more spiritual.",
+   "You feel more spiritual.",
+   "You feel more spiritual."},
+  {"You feel forlorn.",
+   "You feel forlorn.",
+   "You feel forlorn."},
+},
 };

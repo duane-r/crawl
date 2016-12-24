@@ -2183,6 +2183,10 @@ void dock_piety(int piety_loss, int penance)
 // Scales a piety number, applying modifiers (faith).
 int piety_scale(int piety)
 {
+    if (player_mutation_level(MUT_THEOSOPHIST))
+        return piety + (player_mutation_level(MUT_THEOSOPHIST) + 1) *
+            div_rand_round(piety, 8);
+
     return piety + (you.faith() * div_rand_round(piety, 4));
 }
 

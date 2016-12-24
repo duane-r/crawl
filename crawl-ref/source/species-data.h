@@ -721,6 +721,23 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
 } },
 
+{ SP_EPOCRASIAN, {
+    "Ep",
+    "Epocrasian", nullptr, nullptr,
+    SPF_NONE,
+    -1, -2, 1, 4,
+    MONS_HUMAN,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    5, 11, 4, // 20
+    { STAT_INT, STAT_DEX }, 5,
+    { { MUT_THEOSOPHIST, 3, 1 },
+      { MUT_THIN_SKELETAL_STRUCTURE, 3, 1 }, },
+    {},
+    {},
+    { JOB_MONK },
+    { SK_SHORT_BLADES, SK_SLINGS },
+} },
+
 { SP_HIGH_ELF, {
     "HE",
     "High Elf", "Elven", "Elf",

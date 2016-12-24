@@ -312,6 +312,8 @@ static const ability_def Ability_List[] =
     { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, {}, abflag::NONE },
 
+    { ABIL_MAP, "Mapping", 3, 0, 100, 0, {}, abflag::INSTANT },
+
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
 
@@ -1801,6 +1803,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         else
             return SPRET_ABORT;
+        break;
+
+    case ABIL_MAP:
+        fail_check();
+        if (!is_map_persistent())
+        {
+            mpr("It would have no effect in this place.");
+            return SPRET_ABORT;
+        }
+        //mpr(pre_succ_msg);
+        magic_mapping(500, 100, false);
         break;
 
     case ABIL_DELAYED_FIREBALL:
@@ -3330,6 +3343,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
             _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
     }
+
+    if (you.species == SP_EPOCRASIAN)
+        _add_talent(talents, ABIL_MAP, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (player_mutation_level(MUT_SPIT_POISON) == 2)

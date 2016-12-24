@@ -1480,6 +1480,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VINE_STALKER,    SK_POISON_MAGIC,    0),
     APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
     APT(SP_VINE_STALKER,    SK_EVOCATIONS,     -1),
+
+    // SP_EPOCRASIAN
+    APT(SP_EPOCRASIAN,      SK_FIGHTING,       -2),
+    APT(SP_EPOCRASIAN,      SK_SHORT_BLADES,    0),
+    APT(SP_EPOCRASIAN,      SK_LONG_BLADES,    -2),
+    APT(SP_EPOCRASIAN,      SK_AXES,           -2),
+    APT(SP_EPOCRASIAN,      SK_MACES_FLAILS,   -3),
+    APT(SP_EPOCRASIAN,      SK_POLEARMS,       -2),
+    APT(SP_EPOCRASIAN,      SK_STAVES,          1),
+    APT(SP_EPOCRASIAN,      SK_SLINGS,         -1),
+    APT(SP_EPOCRASIAN,      SK_BOWS,           -2),
+    APT(SP_EPOCRASIAN,      SK_CROSSBOWS,      -2),
+    APT(SP_EPOCRASIAN,      SK_THROWING,       -2),
+    APT(SP_EPOCRASIAN,      SK_ARMOUR,         -3),
+    APT(SP_EPOCRASIAN,      SK_DODGING,         1),
+    APT(SP_EPOCRASIAN,      SK_STEALTH,         3),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_EPOCRASIAN,      SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_EPOCRASIAN,      SK_SHIELDS,        -3),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_EPOCRASIAN,      SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_EPOCRASIAN,      SK_UNARMED_COMBAT, -2),
+    APT(SP_EPOCRASIAN,      SK_SPELLCASTING,    1),
+    APT(SP_EPOCRASIAN,      SK_CONJURATIONS,   -2),
+    APT(SP_EPOCRASIAN,      SK_HEXES,           1),
+    APT(SP_EPOCRASIAN,      SK_CHARMS,         -2),
+    APT(SP_EPOCRASIAN,      SK_SUMMONINGS,     -2),
+    APT(SP_EPOCRASIAN,      SK_NECROMANCY,     -1),
+    APT(SP_EPOCRASIAN,      SK_TRANSLOCATIONS,  1),
+    APT(SP_EPOCRASIAN,      SK_TRANSMUTATIONS, -2),
+    APT(SP_EPOCRASIAN,      SK_FIRE_MAGIC,     -2),
+    APT(SP_EPOCRASIAN,      SK_ICE_MAGIC,      -2),
+    APT(SP_EPOCRASIAN,      SK_AIR_MAGIC,      -2),
+    APT(SP_EPOCRASIAN,      SK_EARTH_MAGIC,    -1),
+    APT(SP_EPOCRASIAN,      SK_POISON_MAGIC,   -2),
+    APT(SP_EPOCRASIAN,      SK_INVOCATIONS,     4),
+    APT(SP_EPOCRASIAN,      SK_EVOCATIONS,      1),
 };
 
 #endif

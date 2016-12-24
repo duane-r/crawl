@@ -244,6 +244,8 @@ enum ability_type
 #endif
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,
+    // Epocrasian
+    ABIL_MAP,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -3851,6 +3853,7 @@ enum mutation_type
     MUT_STURDY_FRAME,
     MUT_SANGUINE_ARMOUR,
 #endif
+    MUT_THEOSOPHIST,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -4221,6 +4224,7 @@ enum species_type
     SP_NAGA,
     SP_OGRE,
     SP_TROLL,
+    SP_EPOCRASIAN,
 
     SP_RED_DRACONIAN,
       SP_FIRST_NONBASE_DRACONIAN = SP_RED_DRACONIAN,
