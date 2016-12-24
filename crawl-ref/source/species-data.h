@@ -735,10 +735,9 @@ static const map<species_type, species_def> species_data =
       { MUT_UNBREATHING, 1, 1 }, { MUT_SKELETON_REGEN, 1, 1 },  },
     { "You do not eat or drink." },
     { "no food or potions" },
-    { JOB_WIZARD, JOB_CONJURER, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
-      JOB_FIRE_ELEMENTALIST, JOB_SUMMONER },
-    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+    { JOB_FIGHTER, JOB_GLADIATOR },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES,
+      SK_SHORT_BLADES },
 } },
 
 { SP_HIGH_ELF, {
