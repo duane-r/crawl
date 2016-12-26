@@ -440,7 +440,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ALTAR_HEPLIAKLQANA:
         return TILE_DNGN_ALTAR_HEPLIAKLQANA;
     case DNGN_ALTAR_ECUMENICAL:
-        return TILE_DNGN_UNKNOWN_ALTAR;
+        return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -2826,12 +2826,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case BROWN:
-        if (bolt.name == "rocky blast"
-            || bolt.name == "large rocky blast"
-            || bolt.name == "blast of sand")
-        {
+        if (bolt.name == "rocky blast")
             return TILE_BOLT_SANDBLAST;
-        }
         break;
 
     case GREEN:

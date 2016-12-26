@@ -1348,6 +1348,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_ARMOUR,          1),
     APT(SP_DJINNI,          SK_DODGING,        -1),
     APT(SP_DJINNI,          SK_STEALTH,        -1),
+    APT(SP_DJINNI,          SK_STABBING,      UNUSABLE_SKILL),
     APT(SP_DJINNI,          SK_SHIELDS,         0),
     APT(SP_DJINNI,          SK_TRAPS,         UNUSABLE_SKILL),
     APT(SP_DJINNI,          SK_UNARMED_COMBAT, -1),
@@ -1516,5 +1517,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SKELETON,           SK_INVOCATIONS,    -3),
     APT(SP_SKELETON,           SK_EVOCATIONS,     -1),
 };
+COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);
 
 #endif
