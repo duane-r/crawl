@@ -1873,6 +1873,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_RING_OF_FLAMES:
         return cast_ring_of_flames(powc, fail);
 
+    case SPELL_MAGIC_MAP:
+        return cast_mapping(powc, fail);
+
     // Escape spells.
     case SPELL_BLINK:
         return cast_blink(fail);

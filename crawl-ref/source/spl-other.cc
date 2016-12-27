@@ -24,6 +24,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
+#include "view.h"
 
 spret_type cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -342,6 +343,19 @@ spret_type cast_darkness(int pow, bool fail)
         mprf(MSGCH_DURATION, "It gets dark.");
     you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
     update_vision_range();
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_mapping(int pow, bool fail)
+{
+    fail_check();
+    if (!is_map_persistent())
+    {
+        mpr("It would have no effect in this place.");
+        return SPRET_ABORT;
+    }
+    magic_mapping(500, 100, false);
 
     return SPRET_SUCCESS;
 }

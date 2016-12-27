@@ -332,6 +332,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Burglary
+    SPELL_MAGIC_MAP,
     SPELL_SWIFTNESS,
     SPELL_PASSWALL,
     SPELL_GOLUBRIAS_PASSAGE,

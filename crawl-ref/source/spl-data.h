@@ -3847,6 +3847,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MAGIC_MAP, "Magic Map",
+    SPTYP_CHARMS | SPTYP_EARTH,
+    SPFLAG_UTILITY,
+    2,
+    50,
+    -1, -1,
+    2, 0,
+    TILEG_BECKONING,
+},
+
+{
     SPELL_BECKONING, "Lesser Beckoning",
     SPTYP_TRANSLOCATION,
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
