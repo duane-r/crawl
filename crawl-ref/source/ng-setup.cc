@@ -312,9 +312,6 @@ static void _give_items_skills(const newgame_def& ng)
         if (!you_worship(GOD_XOM))
             you.piety_max[you.religion] = you.piety;
     }
-
-    if (you.species == SP_HUMAN)
-      newgame_make_item(OBJ_POTIONS, POT_BENEFICIAL_MUTATION, 5);
 }
 
 static void _give_starting_food()

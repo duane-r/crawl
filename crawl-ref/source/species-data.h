@@ -427,7 +427,7 @@ static const map<species_type, species_def> species_data =
     "Hu",
     "Human", nullptr, nullptr,
     SPF_NONE,
-    1, 0, 0, 3,
+    0, 0, 0, 3,
     MONS_HUMAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
