@@ -1287,6 +1287,24 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
 },
 
 {
+    ZAP_AIRSTRIKE,
+    "air strike",
+    200,
+    nullptr,
+    new tohit_calculator<10, 1, 25>,
+    nullptr,
+    new tohit_calculator<17, 1, 25>,
+    CYAN,
+    false,
+    BEAM_AIR,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    false,
+    4
+},
+
+{
     ZAP_FIRE_STORM,
     "great blast of fire",
     200,

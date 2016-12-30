@@ -57,6 +57,7 @@
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -558,6 +559,7 @@ void zap_wand(int slot)
         "Zapping: " + menu_colour_item_name(wand, DESC_INVENTORY)
                     + (wasteful ? " <lightred>(will waste charges)</lightred>"
                                 : "");
+
     direction_chooser_args args;
     args.mode = targ_mode;
     args.range = tracer_range;
@@ -645,8 +647,11 @@ void zap_wand(int slot)
     surge_power(you.spec_evoke() + surge);
     power = player_adjust_evoc_power(power, surge);
 
-    // zapping() updates beam.
-    zapping(type_zapped, power, beam);
+    if (wand.sub_type == WAND_AIR)
+      cast_airstrike(power, zap_wand, false);
+    else
+      // zapping() updates beam.
+      zapping(type_zapped, power, beam);
 
     // Take off a charge.
     wand.charges--;
