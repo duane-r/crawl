@@ -134,6 +134,44 @@ static bool _is_boring_item(int type, int sub_type)
 
 static weapon_type _determine_weapon_subtype(int item_level)
 {
+    if (!one_chance_in(5))
+    {
+        int best_sk = you.skill(SK_FIRST_WEAPON);
+        for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
+            if (you.skill((skill_type) i) > you.skill((skill_type) best_sk))
+                best_sk = i;
+        if (you.skill((skill_type) SK_UNARMED_COMBAT) > you.skill((skill_type) best_sk))
+            best_sk = SK_UNARMED_COMBAT;
+
+        int result = OBJ_RANDOM;
+        item_def item_considered;
+        item_considered.base_type = OBJ_WEAPONS;
+        int count = 0;
+
+        for (int i = 0; i < NUM_WEAPONS; ++i)
+        {
+            const int wskill = item_attack_skill(OBJ_WEAPONS, i);
+
+            if (wskill != best_sk)
+                continue;
+            item_considered.sub_type = i;
+
+            int acqweight = property(item_considered, PWPN_ACQ_WEIGHT) * 100;
+
+            if (!acqweight)
+                continue;
+
+            // reservoir sampling
+            if (x_chance_in_y(acqweight, count += acqweight))
+                result = i;
+        }
+
+        if (result != OBJ_RANDOM)
+            return (weapon_type) result;
+        else
+            mprf("* No weapon type picked");
+    }
+
     if (item_level > 6 && one_chance_in(30)
         && x_chance_in_y(10 + item_level, 100))
     {
