@@ -2223,7 +2223,7 @@ int player_armour_shield_spell_penalty()
     const int total_penalty = body_armour_penalty
                  + 19 * you.adjusted_shield_penalty(scale);
 
-    return max(total_penalty, 0) / scale;
+    return max(total_penalty / 5, 0) / scale;
 }
 
 /**
