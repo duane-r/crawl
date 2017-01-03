@@ -160,6 +160,8 @@ void choose_tutorial_character(newgame_def& ng_choice)
 static const species_type species_order[] =
 {
     // comparatively human-like looks
+    SP_HUMAN,
+#if 0
     SP_HUMAN,          SP_DEEP_ELF,
     SP_DEEP_DWARF,     SP_HILL_ORC,
     // small species
@@ -181,6 +183,7 @@ static const species_type species_order[] =
     SP_VAMPIRE,
     // not humanoid at all
     SP_FELID,          SP_OCTOPODE,
+#endif
 };
 COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
 
