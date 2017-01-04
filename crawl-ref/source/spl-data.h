@@ -1371,6 +1371,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CALL_VENOMOUS_FAMILIAR, "Call Venomous Familiar",
+    SPTYP_SUMMONING | SPTYP_POISON,
+    SPFLAG_NONE,
+    3,
+    120,
+    -1, -1,
+    3, 0,
+    TILEG_CALL_VENOMOUS_FAMILIAR,
+},
+
+{
     SPELL_SUMMON_DRAGON, "Summon Dragon",
     SPTYP_SUMMONING,
     SPFLAG_MONS_ABJURE,

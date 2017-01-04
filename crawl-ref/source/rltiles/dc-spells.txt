@@ -117,6 +117,7 @@ venom_bolt VENOM_BOLT
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
+call_venomous_familiar CALL_VENOMOUS_FAMILIAR
 call_imp CALL_IMP
 malign_gateway MALIGN_GATEWAY
 recall RECALL
