@@ -2412,3 +2412,18 @@ void reset_powered_by_death_duration()
     const int pbd_dur = random_range(2, 5);
     you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
 }
+
+int count_corpses(const actor &counter)
+{
+    int count = 0;
+
+    for (radius_iterator ri(counter.pos(), LOS_NO_TRANS); ri; ++ri)
+        for (stack_iterator si(*ri, true); si; ++si)
+        {
+            item_def &item = *si;
+            if (item.base_type == OBJ_CORPSES)
+              count++;
+        }
+
+    return count;
+}

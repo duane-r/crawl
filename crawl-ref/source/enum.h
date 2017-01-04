@@ -241,6 +241,8 @@ enum ability_type
     ABIL_TRAN_BAT,
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,
+    // Skeletons
+    ABIL_SUMMON_SKULL,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -3175,6 +3177,7 @@ enum monster_type                      // menv[].type
     MONS_SILENT_SPECTRE,
     MONS_EIDOLON,
     MONS_FLYING_SKULL,
+    MONS_FLYING_SKULL_BABY,
     MONS_SKELETAL_WARRIOR,
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,
@@ -3833,6 +3836,7 @@ enum mutation_type
     MUT_STURDY_FRAME,
     MUT_SANGUINE_ARMOUR,
 #endif
+    MUT_SKELETON_REGEN,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -4231,6 +4235,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_SKELETON,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

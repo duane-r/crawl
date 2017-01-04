@@ -120,6 +120,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
+#include "rot.h"
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
@@ -1873,6 +1874,13 @@ static void _do_rest()
         }
         else
             mpr("You start resting.");
+    }
+
+    if (player_mutation_level(MUT_SKELETON_REGEN) &&
+        count_corpses(you) != 0)
+    {
+        _start_running(RDIR_REST, ROT_TIME_FACTOR * 4);
+        return;
     }
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);

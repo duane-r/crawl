@@ -1805,4 +1805,13 @@ static const mutation_def mut_data[] =
   {"You feel sensitive to extremes of temperature.", "", ""},
   {"You no longer feel sensitive to extremes of temperature", "", ""},
 },
+
+{ MUT_SKELETON_REGEN, 0, 1, mutflag::BAD, false,
+  "unable to heal except near corpses",
+
+  {"You are unable to heal except near corpses", "", ""},
+  {"You feel a longing for the dead.", "", ""},
+  {"Your longing for the dead abates.", "", ""},
+},
+
 };
