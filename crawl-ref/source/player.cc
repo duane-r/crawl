@@ -1210,11 +1210,6 @@ void update_mana_regen_amulet_attunement()
         you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
 }
 
-int player_hunger_rate(bool temp)
-{
-    return 0;
-}
-
 /**
  * How many spell levels does the player have total, including those used up
  * by memorized spells?
@@ -1386,11 +1381,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         rc += get_form()->res_cold();
 
-        if (you.species == SP_VAMPIRE)
-        {
-          rc += 2;
-        }
-
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && temperature_effect(LORC_COLD_VULN))
             rc--;
@@ -1546,7 +1536,6 @@ bool player_res_torment(bool random)
     }
 
     return get_form()->res_neg() == 3
-           || you.species == SP_VAMPIRE
            || you.petrified()
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
@@ -1573,7 +1562,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case US_UNDEAD: // mummies & lichform
             return 3;
         case US_SEMI_UNDEAD: // vampire
-            return 3;
+            break;
     }
 
     if (you.is_nonliving(temp)
@@ -1613,11 +1602,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     // mutations:
     rp += player_mutation_level(MUT_POISON_RESISTANCE, temp);
     rp += player_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
-
-    // Only thirsty vampires are naturally poison resistant.
-    // XXX: && temp?
-    if (you.species == SP_VAMPIRE)
-        rp++;
 
     if (temp)
     {
@@ -1807,12 +1791,6 @@ int player_energy()
 int player_prot_life(bool calc_unid, bool temp, bool items)
 {
     int pl = 0;
-
-    // Hunger is temporary, true, but that's something you can control,
-    // especially as life protection only increases the hungrier you
-    // get.
-    if (you.species == SP_VAMPIRE)
-      pl = 2;
 
     // Same here. Your piety status, and, hence, TSO's protection, is
     // something you can more or less control.
@@ -3129,7 +3107,7 @@ int player_stealth()
     if (you.duration[DUR_SILENCE])
         stealth -= STEALTH_PIP;
 
-    // Thirsty vampires are stealthier.
+    // Vampires are stealthier.
     if (you.species == SP_VAMPIRE)
     {
         if (you.form == TRAN_BAT)
@@ -3233,22 +3211,6 @@ static void _display_char_status(int value, const char *fmt, ...)
         mprf("%s.", msg.c_str());
 
     va_end(argp);
-}
-
-static void _display_vampire_status()
-{
-    string msg = "You ";
-    vector<const char *> attrib;
-
-    attrib.push_back("resist poison");
-    attrib.push_back("resist cold");
-    attrib.push_back("significantly resist negative energy");
-
-    if (!attrib.empty())
-    {
-        msg += comma_separated_line(attrib.begin(), attrib.end());
-        mpr(msg);
-    }
 }
 
 static void _display_movement_speed()
@@ -3355,9 +3317,7 @@ static string _constriction_description();
 
 void display_char_status()
 {
-    if (you.undead_state() == US_SEMI_UNDEAD)
-        mpr("You are undead.");
-    else if (you.undead_state())
+    if (you.undead_state())
         mpr("You are undead.");
     else if (you.duration[DUR_DEATHS_DOOR])
     {
@@ -3379,9 +3339,6 @@ void display_char_status()
     }
     else if (you.haloed())
         mpr("An external divine halo illuminates you.");
-
-    if (you.species == SP_VAMPIRE)
-        _display_vampire_status();
 
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
@@ -5499,13 +5456,6 @@ void player::banish(actor* /*agent*/, const string &who, const int power,
     banished    = true;
     banished_by = who;
     banished_power = power;
-}
-
-// For semi-undead species (Vampire!) reduce food cost for spells and abilities
-// to 50% (hungry, very hungry, near starving) or zero (starving).
-int calc_hunger(int food_cost)
-{
-    return 0;
 }
 
 bool player::paralysed() const

@@ -570,7 +570,7 @@ dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe / broad axe, ' ..
    'leather armour / pair of gloves')
 }}
 KITEM: w = mundane quarterstaff
-KITEM: s = nothing / nothing
+KITEM: s = nothing
 KFEAT: 'o = W
 CLEAR:  _
 MAP
@@ -1558,7 +1558,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
-MONS:  vampire ; nothing . long sword . robe, tyrant leech
+MONS:  vampire ; long sword . robe, tyrant leech
 KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
@@ -1614,7 +1614,7 @@ SUBST: ghi = .
 KMONS: D = patrolling spriggan rider
 KMONS: SGHI = spriggan / nothing
 KMONS: F = spriggan druid
-KITEM: f = nothing / nothing / fruit
+KITEM: f = nothing / fruit
 MAP
        ttttt
   ttttttgggt

@@ -16,8 +16,6 @@
 // aut until fresh blood potions rot away
 #define FRESHEST_BLOOD 22500
 
-bool is_perishable_stack(const item_def &item) PURE;
-
 void rot_floor_items(int elapsedTime);
 
 

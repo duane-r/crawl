@@ -57,7 +57,6 @@
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-damage.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
 #include "spl-zap.h"

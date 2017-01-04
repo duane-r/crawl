@@ -226,16 +226,6 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         return false;
 }
 
-#if 0
-static bool _is_spawn_scaled_area(const level_id &here)
-{
-    return is_connected_branch(here.branch)
-           && !is_hell_subbranch(here.branch)
-           && here.branch != BRANCH_VESTIBULE
-           && here.branch != BRANCH_ZOT;
-}
-#endif
-
 // Scale monster generation parameter with time spent on level. Note:
 // (target_value - base_value) * dropoff_ramp_turns must be < INT_MAX!
 static int _scale_spawn_parameter(int base_value,
@@ -245,77 +235,6 @@ static int _scale_spawn_parameter(int base_value,
                                   int dropoff_ramp_turns  = 12000)
 {
   return base_value;
-#if 0
-    if (!_is_spawn_scaled_area(level_id::current()))
-        return base_value;
-
-    const int turns_on_level = env.turns_on_level;
-    return turns_on_level <= dropoff_start_turns ? base_value :
-           turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
-           final_value :
-
-           // Actual scaling, strictly linear at the moment:
-           (base_value +
-            (target_value - base_value)
-            * (turns_on_level - dropoff_start_turns)
-            / dropoff_ramp_turns);
-#endif
-}
-
-static void _apply_ood(level_id &place)
-{
-    // OODs do not apply to any portal vaults, any 1-level branches, Zot and
-    // hells. What with newnewabyss?
-    if (!is_connected_branch(place)
-        || place.branch == BRANCH_ZOT
-        || is_hell_subbranch(place.branch)
-        || brdepth[place.branch] <= 1)
-    {
-        return;
-    }
-
-    // The OOD fuzz roll is not applied at level generation time on
-    // D:1, and is applied slightly less often (0.75*0.14) on D:2. All
-    // other levels have a straight 14% chance of moderate OOD fuzz
-    // for each monster at level generation, and the chances of
-    // moderate OODs go up to 100% after a ramp-up period.
-
-    if (place.branch == BRANCH_DUNGEON
-        && (place.depth == 1 && env.turns_on_level < 701
-         || place.depth == 2 && (env.turns_on_level < 584 || one_chance_in(4))))
-    {
-        return;
-    }
-
-#ifdef DEBUG_DIAGNOSTICS
-    level_id old_place = place;
-#endif
-
-    if (x_chance_in_y(_scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
-                      1000))
-    {
-        const int fuzzspan = 5;
-        const int fuzz = max(0, random_range(-fuzzspan, fuzzspan, 2));
-
-        // Quite bizarre logic: why should we fail in >50% cases here?
-        if (fuzz)
-        {
-            place.depth += fuzz;
-            dprf(DIAG_MONPLACE, "Monster level fuzz: %d (old: %s, new: %s)",
-                 fuzz, old_place.describe().c_str(), place.describe().c_str());
-        }
-    }
-
-    // On D:13 and deeper, and for those who tarry, something extreme:
-    if (env.turns_on_level > 1400 - place.absdepth() * 117
-        && x_chance_in_y(_scale_spawn_parameter(2, 10000, 10000, 3000, 9000),
-                         10000))
-    {
-        // this maxes depth most of the time
-        place.depth += random2avg(27, 2);
-        dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
-             old_place.describe().c_str(), place.describe().c_str());
-    }
 }
 
 static int _vestibule_spawn_rate()
@@ -466,9 +385,6 @@ monster_type pick_random_monster(level_id place,
         if (!_is_random_monster(type))
             return type;
     }
-
-    if (false && allow_ood)
-        _apply_ood(place);
 
     place.depth = min(place.depth, branch_ood_cap(place.branch));
 

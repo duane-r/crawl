@@ -86,7 +86,7 @@ function setup_room(e, id)
     e.tile("X = wall_stone_white")
 
     -- Create items
-e.kitem("1 = superb_item ident:all w:590 / nothing w:2 /\
+e.kitem("1 = superb_item ident:all w:590 /\
             potion of heal wounds ident:all q:4 w:3 /\
             potion of haste ident:all q:4 w:3 /\
             scroll of recharging ident:all w:1 /\

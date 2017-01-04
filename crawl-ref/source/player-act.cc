@@ -431,10 +431,6 @@ item_def *player::shield() const
     return slot_item(EQ_SHIELD, false);
 }
 
-void player::make_hungry(int hunger_increase, bool silent)
-{
-}
-
 string player::name(description_level_type dt, bool, bool) const
 {
     switch (dt)

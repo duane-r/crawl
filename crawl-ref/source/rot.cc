@@ -30,17 +30,6 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time);
 
 
 
-/**
- * Checks if a given item can rot.
- *
- * @param stack  The item to check.
- * @return       Whether the given item is either chunks or blood potions.
- */
-bool is_perishable_stack(const item_def &item)
-{
-    return false;
-}
-
 // Compare two CrawlStoreValues storing type T.
 template<class T>
 static bool _storeval_greater(const CrawlStoreValue &a,

@@ -314,10 +314,6 @@ static void _give_items_skills(const newgame_def& ng)
     }
 }
 
-static void _give_starting_food()
-{
-}
-
 static void _setup_tutorial_miscs()
 {
     // Allow for a few specific hint mode messages.
@@ -463,8 +459,6 @@ static void _setup_generic(const newgame_def& ng)
 
     if (you.species == SP_DEMONSPAWN)
         roll_demonspawn_mutations();
-
-    _give_starting_food();
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();

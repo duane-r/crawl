@@ -225,7 +225,7 @@ KMONS:   z = killer bee
 KMONS:   Z = queen bee
 ITEM:    scroll of teleportation
 ITEM:    amulet of reflection
-KITEM:   gzZ = nothing w:10 / nothing w:40
+KITEM:   gzZ = nothing
 KFEAT:   L = l
 KFEAT:   ~ = w
 KFEAT:   ^ = known teleport trap / known Zot trap

@@ -660,7 +660,6 @@ public:
                            bool slow_cold_blood = true) override;
     void god_conduct(conduct_type thing_done, int level) override;
 
-    void make_hungry(int nutrition, bool silent = true) override;
     bool poison(actor *agent, int amount = 1, bool force = false) override;
     bool sicken(int amount) override;
     void paralyse(actor *, int str, string source = "") override;
@@ -924,8 +923,6 @@ int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 
 int player_movement_speed();
-
-int player_hunger_rate(bool temp = true);
 
 int calc_hunger(int food_cost);
 

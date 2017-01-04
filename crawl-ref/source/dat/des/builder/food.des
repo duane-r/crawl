@@ -255,7 +255,7 @@ KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
-KITEM:   Ya = nothing / nothing
+KITEM:   Ya = nothing
 KITEM:   b = nothing / fruit q:1
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
