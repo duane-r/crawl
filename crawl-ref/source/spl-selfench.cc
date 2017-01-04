@@ -13,8 +13,8 @@
 #include "art-enum.h"
 
 #include "coordit.h" // radius_iterator
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"

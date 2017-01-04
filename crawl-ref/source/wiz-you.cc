@@ -12,10 +12,9 @@
 
 #include "abyss.h"
 #include "dbg-util.h"
-
-#include "godabil.h"
-#include "godwrath.h"
-#include "item_use.h"
+#include "god-abil.h"
+#include "god-wrath.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -882,7 +881,7 @@ static void debug_downtick_xl(int newxl)
     set_hp(max(1, you.hp));
 }
 
-void wizard_set_xl()
+void wizard_set_xl(bool change_skills)
 {
     mprf(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
@@ -899,7 +898,7 @@ void wizard_set_xl()
         return;
     }
 
-    set_xl(newxl, yesno("Train skills?", true, 'n'));
+    set_xl(newxl, change_skills);
     mprf("Experience level set to %d.", newxl);
 }
 

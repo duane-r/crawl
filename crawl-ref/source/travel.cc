@@ -33,12 +33,12 @@
 #include "files.h"
 
 #include "format.h"
-#include "godabil.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -3901,9 +3901,8 @@ bool runrest::run_should_stop() const
     if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return true;
 
-    for (adjacent_iterator ai(targ); ai; ++ai)
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            return true;
+    if (count_adjacent_slime_walls(targ))
+        return true;
 
     for (int i = 0; i < 3; i++)
     {
