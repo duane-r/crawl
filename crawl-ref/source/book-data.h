@@ -392,4 +392,11 @@ static const vector<spell_type> spellbook_templates[] =
 
 };
 
+#if 0
+{
+    SPELL_SUMMON_BRIARS,
+    SPELL_SUMMON_VINES,
+},
+#endif
+
 COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

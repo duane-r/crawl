@@ -3457,3 +3457,68 @@ bool summon_flying_skull(int pow)
 
     return true;
 }
+
+spret_type cast_summon_vines(int pow, god_type god, bool fail)
+{
+    int count = 0;
+    pow = pow + random_range(-10,10);
+    if (pow < 51)
+        count = 1;
+    else if (pow < 78)
+        count = 2;
+    else
+        count = 3;
+
+    for (int i = 0; i < count; ++i)
+    {
+        mgen_data vine(MONS_SNAPLASHER_VINE,
+                BEH_FRIENDLY, you.pos(), MHITYOU,
+                MG_FORCE_BEH | MG_AUTOFOE);
+        vine.set_summoned(&you, min(2 + (random2(pow) / 10), 6),
+                SPELL_SUMMON_VINES, GOD_NO_GOD);
+        vine.hd = max(8, min(27,5+pow/8));
+
+        monster *summon = create_monster(vine);
+
+        if (!summon)
+            return SPRET_ABORT;
+
+        summon->flags |= MF_ATT_CHANGE_ATTEMPT;
+    }
+
+    if (count == 1)
+        mpr("A vine bursts forth from the floor.");
+    if (count > 1)
+        mpr("Vines burst forth from the floor.");
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_summon_briars(int pow, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target) || !actor_at(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const coord_def base = beam.target;
+
+    for (adjacent_iterator ai(base, false); ai; ++ai)
+    {
+        if (!in_bounds(*ai) || cell_is_solid(*ai) || actor_at(*ai))
+            continue;
+
+        mgen_data briar(MONS_BRIAR_PATCH,
+                BEH_FRIENDLY, *ai, MHITYOU,
+                MG_FORCE_BEH | MG_FORCE_PLACE);
+        briar.set_summoned(&you, min(6,2+random2(pow/8)/5),
+                SPELL_SUMMON_BRIARS, GOD_NO_GOD);
+        briar.hd = max(10, min(45,5+pow/5));
+
+        create_monster(briar);
+    }
+    return SPRET_SUCCESS;
+}

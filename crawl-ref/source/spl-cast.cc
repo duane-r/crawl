@@ -1660,6 +1660,12 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_VENOMOUS_FAMILIAR:
         return cast_call_venomous_familiar(powc, god, fail);
 
+    case SPELL_SUMMON_VINES:
+        return cast_summon_vines(powc, god, fail);
+
+    case SPELL_SUMMON_BRIARS:
+        return cast_summon_briars(powc, beam, fail);
+
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);
 

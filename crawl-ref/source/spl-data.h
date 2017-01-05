@@ -325,6 +325,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_VINES, "Summon Vines",
+    SPTYP_SUMMONING | SPTYP_POISON,
+    SPFLAG_NONE,
+    4,
+    200,
+    -1, -1,
+    3, 0,
+    TILEG_VENOM_BOLT,
+},
+
+{
+    SPELL_SUMMON_BRIARS, "Summon Briars",
+    SPTYP_SUMMONING | SPTYP_POISON,
+    SPFLAG_TARGET | SPFLAG_NEEDS_TRACER,
+    5,
+    300,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    TILEG_VENOM_BOLT,
+},
+
+{
     SPELL_OLGREBS_TOXIC_RADIANCE, "Olgreb's Toxic Radiance",
     SPTYP_POISON,
     SPFLAG_AREA,
