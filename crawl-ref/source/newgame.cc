@@ -1786,6 +1786,19 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
                 weapons.push_back(wp);
         }
     }
+    else if (job_gets_caster_weapons(ng.job))
+    {
+        weapon_type startwep[3] = { WPN_DAGGER, WPN_QUARTERSTAFF, WPN_UNARMED};
+        for (int i = 0; i < 3; ++i)
+        {
+            weapon_choice wp;
+            wp.first = startwep[i];
+
+            wp.second = weapon_restriction(wp.first, ng);
+            if (wp.second != CC_BANNED)
+                weapons.push_back(wp);
+        }
+    }
     else
     {
         weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,

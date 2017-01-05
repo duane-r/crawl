@@ -96,6 +96,11 @@ bool job_has_weapon_choice(job_type job)
     return _job_def(job).wchoice != WCHOICE_NONE;
 }
 
+bool job_gets_caster_weapons(job_type job)
+{
+    return _job_def(job).wchoice == WCHOICE_CASTER;
+}
+
 bool job_gets_good_weapons(job_type job)
 {
     return _job_def(job).wchoice == WCHOICE_GOOD;

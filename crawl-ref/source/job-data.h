@@ -1,6 +1,7 @@
 enum weapon_choice
 {
     WCHOICE_NONE,   ///< No weapon choice
+    WCHOICE_CASTER, ///< Caster weapon choice
     WCHOICE_PLAIN,  ///< Normal weapon choice
     WCHOICE_GOOD,   ///< Chooses from "good" weapons
     WCHOICE_RANGED, ///< Choice of ranged weapon
@@ -49,9 +50,9 @@ static const map<job_type, job_def> job_data =
     0, 7, 5,
     { SP_DEEP_ELF, SP_TENGU, SP_BASE_DRACONIAN, SP_NAGA, SP_VINE_STALKER, },
     { "robe", "book of Air" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_CONJURATIONS, 1 }, { SK_AIR_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
-      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_ARCANE_MARKSMAN, {
@@ -114,9 +115,9 @@ static const map<job_type, job_def> job_data =
     0, 7, 5,
     { SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN, SP_DEMIGOD, },
     { "robe", "book of Conjurations" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_CONJURATIONS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
-      { SK_STEALTH, 2 }, },
+      { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_EARTH_ELEMENTALIST, {
@@ -125,9 +126,9 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_DEEP_DWARF, SP_SPRIGGAN, SP_GARGOYLE, SP_DEMIGOD,
       SP_GHOUL, SP_OCTOPODE, },
     { "book of Geomancy", "stone q:30", "robe", },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
-      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, }
 } },
 
 { JOB_ENCHANTER, {
@@ -156,9 +157,9 @@ static const map<job_type, job_def> job_data =
     0, 7, 5,
     { SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE, },
     { "robe", "book of Flames" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_CONJURATIONS, 1 }, { SK_FIRE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
-      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_GLADIATOR, {
@@ -188,9 +189,9 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
       SP_GARGOYLE, },
     { "robe", "book of Frost" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_CONJURATIONS, 1 }, { SK_ICE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
-      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_MONK, {
@@ -210,9 +211,9 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_DEEP_DWARF, SP_HILL_ORC, SP_DEMONSPAWN, SP_MUMMY,
       SP_VAMPIRE, },
     { "robe", "book of Necromancy" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_SPELLCASTING, 2 }, { SK_NECROMANCY, 4 }, { SK_DODGING, 2 },
-      { SK_STEALTH, 2 }, },
+      { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_SKALD, {
@@ -231,9 +232,9 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_HILL_ORC, SP_VINE_STALKER, SP_MERFOLK, SP_TENGU,
       SP_VAMPIRE, },
     { "robe", "book of Callings" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_SUMMONINGS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
-      { SK_STEALTH, 2 }, },
+      { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_TRANSMUTER, {
@@ -253,9 +254,9 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_FELID,
       SP_DEMONSPAWN, },
     { "robe", "Young Poisoner's Handbook" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_CONJURATIONS, 1 }, { SK_POISON_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
-      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_WEAPON, 1 }, },
 } },
 
 { JOB_WANDERER, {
@@ -287,9 +288,10 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
       SP_MUMMY, },
     { "robe", "hat", "book of Minor Magic" },
-    WCHOICE_NONE,
+    WCHOICE_CASTER,
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
-      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
+      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 },
+      { SK_SUMMONINGS, 1 }, { SK_WEAPON, 1 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {
