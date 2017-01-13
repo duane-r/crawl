@@ -399,6 +399,11 @@ double sword
 
 A magical weapon with two razor-sharp blades.
 %%%%
+dusty tome
+
+A manuscript written in an undecipherable language. It was found buried, together
+with an equally mystifying crate.
+%%%%
 eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. It's a bug if
